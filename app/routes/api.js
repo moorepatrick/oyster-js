@@ -98,6 +98,7 @@ module.exports = function(app, express) {
 
         }
         res.json({
+          success: true,
           message: 'User created'
         });
       });
