@@ -49,16 +49,20 @@ Create new user
   - message
 
 ### user (/api/users/:user_id)
+#### GET
 Get user information
 - return
-  - all known users
+  - user information
+
 #### PUT
-Create new user
+Update user
 - parameters
   - whatever fields needing to be updated
 - return
   - message
+
 #### DELETE
+Delete user
 - return
   - message
 
