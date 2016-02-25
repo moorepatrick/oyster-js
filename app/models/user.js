@@ -5,18 +5,24 @@ var mongoose = require('mongoose'),
 // user Schema
 var UserSchema = new Schema({
   name: String,
-  username: {type: String, required:true, index: { unique: true}},
-  password: {type: String, required: true, select: false}
+  username: { type: String, required: true, index: { unique: true } },
+  password: { type: String, required: true, select: false }
 });
 
-//Has Password before save
-UserSchema.pre('save', function(next){
+//Hash password before save
+UserSchema.pre('save', function(next) {
   var user = this;
 
-  if(!user.isModified('password')) {return next();}
+  // Has only if modified
+  if (!user.isModified('password')) {
+    return next();
+  }
 
-  bcrypt.hash(user.password, null, null, function(err, hash){
-    if(err) {return next(err);}
+ // Generate Hash
+  bcrypt.hash(user.password, null, null, function(err, hash) {
+    if (err) {
+      return next(err);
+    }
 
     // change password to hashed version
     user.password = hash;
@@ -25,7 +31,7 @@ UserSchema.pre('save', function(next){
 });
 
 //Method to compare given password with db hash
-UserSchema.methods.comparePassword = function(password){
+UserSchema.methods.comparePassword = function(password) {
   var user = this;
   return bcrypt.compareSync(password, user.password);
 };

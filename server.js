@@ -5,19 +5,15 @@ var express = require('express'),
   port = config.get('port') || 8080,
   bodyParser = require('body-parser'),
   morgan = require('morgan'),
-  mongoose = require('mongoose'),
-  jwt = require('jsonwebtoken'),
-  User = require('./app/models/user');
+  mongoose = require('mongoose');
 
-// DB Configuaration
-mongoose.connect('mongodb://' + config.dbConfig.host + ':' +
-  config.dbConfig.port + '/' + config.dbConfig.dbName);
-
+// body parser for POST requests
 app.use(bodyParser.urlencoded({
   extended: true
 }));
 app.use(bodyParser.json());
 
+// CORS Requests handling
 app.use(function(req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
@@ -25,13 +21,17 @@ app.use(function(req, res, next) {
   next();
 });
 
+// Logging
 app.use(morgan('dev'));
-app.use(express.static('public'));
 
-app.get('/', function(req, res){
-  res.send('Welcome to the Oyster home page');
-});
+// Static Files
+app.use(express.static(__dirname + '/public'));
 
+// DB Configuaration
+mongoose.connect('mongodb://' + config.dbConfig.host + ':' +
+  config.dbConfig.port + '/' + config.dbConfig.dbName);
+
+// API Routes
 var apiRoutes = require('./app/routes/api')(app, express);
 app.use('/api', apiRoutes);
 
@@ -39,5 +39,7 @@ app.use('/api', apiRoutes);
 app.get('*', function(req, res) {
   res.sendFile(path.join(__dirname + '/public/index.html'));
 });
+
+// Start Server
 app.listen(port);
 console.log('Running on port: ' + port);
