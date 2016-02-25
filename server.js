@@ -1,6 +1,7 @@
 var express = require('express'),
   app = express(),
   config = require('config'),
+  path = require('path'),
   port = config.get('port') || 8080,
   bodyParser = require('body-parser'),
   morgan = require('morgan'),
