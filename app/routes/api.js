@@ -158,6 +158,9 @@ module.exports = function(app, express) {
           message: 'Successfully deleted'
         });
       });
+  // Get Logged in user information
+  apiRouter.get('/me', function(req, res) {
+    res.send(req.decoded);
     });
 
   return apiRouter;
