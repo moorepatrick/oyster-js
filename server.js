@@ -35,5 +35,9 @@ app.get('/', function(req, res){
 var apiRoutes = require('./app/routes/api')(app, express);
 app.use('/api', apiRoutes);
 
+// Catchall
+app.get('*', function(req, res) {
+  res.sendFile(path.join(__dirname + '/public/index.html'));
+});
 app.listen(port);
 console.log('Running on port: ' + port);
