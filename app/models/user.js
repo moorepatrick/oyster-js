@@ -6,7 +6,8 @@ var mongoose = require('mongoose'),
 var UserSchema = new Schema({
   name: String,
   username: { type: String, required: true, index: { unique: true } },
-  password: { type: String, required: true, select: false }
+  password: { type: String, required: true, select: false },
+  admin: {type: Boolean, require: true, default: false}
 });
 
 //Hash password before save
