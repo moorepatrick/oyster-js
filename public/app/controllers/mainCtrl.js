@@ -1,5 +1,5 @@
 angular.module('mainCtrl', [])
-  .controller('mainController', function($rootScope, $location, Auth, $scope) {
+  .controller('mainController', function($rootScope, $location, Auth, $scope, $cacheFactory) {
     var vm = this;
 
     // Get login status
@@ -36,7 +36,8 @@ angular.module('mainCtrl', [])
     // Logout
     vm.doLogout = function() {
       Auth.logout();
-      vm.user = {};
+      vm.user = '';
       $location.path('/login');
+      $cacheFactory.get('$http').remove('/api/me');
     };
   });
