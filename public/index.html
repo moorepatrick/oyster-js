@@ -19,6 +19,9 @@
   <!-- controllers -->
   <script src="app/controllers/mainCtrl.js"></script>
   <script src="app/controllers/userCtrl.js"></script>
+  <script src="app/controllers/profileCtrl.js"></script>
+  <script src="app/controllers/feedCtrl.js"></script>
+  <script src="app/controllers/adminCtrl.js"></script>
   <!-- services -->
   <script src="app/services/authService.js"></script>
   <script src="app/services/userService.js"></script>
@@ -46,9 +49,9 @@
         <div id="navbar" class="navbar-collapse collapse" ng-if="main.loggedIn">
           <ul class="nav navbar-nav navbar-right">
             <li><a href="/profile">Profile</a></li>
-            <li><a href="/feed">Feeds</a></li>
+            <li><a href="/feeds">Feeds</a></li>
             <li><a href="/settings">Settings</a></li>
-            <li ng-if="main.user.admin"><a href="/users">Admin</a></li>
+            <li ng-if="main.user.admin"><a href="/admin">Admin</a></li>
             <li><a href="#" ng-click="main.doLogout()">Logout</a></li>
           </ul>
         </div>

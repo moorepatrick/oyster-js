@@ -26,7 +26,7 @@ angular.module('mainCtrl', [])
 
           // Redirect to users page
           if (data.success) {
-            $location.path('/users');
+            $location.path('/profile');
           } else {
             vm.error = data.message;
           }
