@@ -33,7 +33,7 @@ mongoose.connect('mongodb://' + config.dbConfig.host + ':' +
 
 // API Routes
 var apiRoutes = require('./app/routes/api')(app, express);
-app.use('/api', apiRoutes);
+app.use('/api/v1', apiRoutes);
 
 // Catchall
 app.get('*', function(req, res) {

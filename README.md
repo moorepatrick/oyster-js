@@ -19,7 +19,7 @@ Coming Soon...
 - password
 
 ## API
-### authenticate (/api/authenticate)
+### authenticate (/api/v1/authenticate)
 #### POST
 retrieve token for future api calls
 - parameters
@@ -30,7 +30,7 @@ retrieve token for future api calls
   - message
   - token
 
-### users (/api/users)
+### users (/api/v1/users)
 All calls the the api require a token received from the server
 
 #### GET
@@ -48,7 +48,7 @@ Create new user
   - success: (boolean)
   - message
 
-### user (/api/users/:user_id)
+### user (/api/v1/users/:user_id)
 #### GET
 Get user information
 - return

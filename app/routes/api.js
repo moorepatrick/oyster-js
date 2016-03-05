@@ -1,5 +1,7 @@
 var User = require('../models/user'),
+  Feed = require('../models/feed').Schema,
   jwt = require('jsonwebtoken'),
+  feedCtrl = require('../controllers/feedCtrl'),
   config = require('config');
 
 // Token Secret
@@ -79,8 +81,7 @@ module.exports = function(app, express) {
         }
       });
     } else {
-      // No Token
-      // Return 403 Forbidden
+      // No Token: Return 403 Forbidden
       res.status(403).send({
         success: false,
         message: 'No token provided.'
@@ -94,40 +95,6 @@ module.exports = function(app, express) {
       message: "hooray! welcome to the api"
     });
   });
-
-  apiRouter.route('/users')
-    // Create User
-    .post(function(req, res) {
-      var user = new User();
-      user.name = req.body.name;
-      user.username = req.body.username;
-      user.password = req.body.password;
-
-      user.save(function(err) {
-        if (err) {
-          // Duplicate User
-          if (err.code == 11000) {
-            return res.json({
-              success: false,
-              message: 'A user with that username exists.'
-            });
-          } else return res.send(err);
-
-        }
-        res.json({
-          message: 'User created'
-        });
-      });
-    })
-    // Get all users
-    .get(function(req, res) {
-      User.find({}, function(err, users) {
-        if (err) res.send(err);
-
-        // Return all users
-        res.json(users);
-      });
-    });
 
   // Individual User
   apiRouter.route('/users/:user_id')
@@ -165,6 +132,119 @@ module.exports = function(app, express) {
       });
     });
 
+  apiRouter.route('/users')
+    // Create User
+    .post(function(req, res) {
+      var user = new User();
+      user.name = req.body.name;
+      user.username = req.body.username;
+      user.password = req.body.password;
+
+      user.save(function(err) {
+        if (err) {
+          // Duplicate User
+          if (err.code == 11000) {
+            return res.json({
+              success: false,
+              message: 'A user with that username exists.'
+            });
+          } else return res.send(err);
+
+        }
+        res.json({
+          message: 'User created'
+        });
+      });
+    })
+    // Get all users
+    .get(function(req, res) {
+      User.find({}, function(err, users) {
+        if (err) res.send(err);
+
+        // Return all users
+        res.json(users);
+      });
+    });
+
+
+
+  // Users filtered feeds
+  apiRouter.route('/feeds/:feed_id')
+    .get(function(req, res) {
+      User.find({ username: req.decoded.username }).select('feeds').exec(function(err, feeds) {
+        if (err) res.send(err);
+
+        res.json(feeds);
+      });
+    })
+    .put(function(req, res) {
+      res.json({ message: req.method + ': ' + req.url + ' not yet implemented' });
+    })
+    .delete(function(req, res) {
+      res.json({ message: req.method + ': ' + req.url + ' not yet implemented' });
+    });
+
+  apiRouter.route('/feeds')
+    .get(function(req, res) {
+      User.find({ username: req.decoded.username }).select('-_id username feeds').exec(function(err, feeds) {
+        if (err) res.send(err);
+
+        res.json(feeds);
+      });
+    })
+    .post(function(req, res) {
+      console.log(req.method);
+      return res.json({
+        url: req.body.url,
+        message: req.method + ': ' + req.url + ' not yet implemented'
+      });
+    });
+
+  apiRouter.route('/subscriptions/:feed_id')
+    .delete(function(req, res) {
+      res.json({ message: 'Not yet implemented' });
+    });
+
+  apiRouter.route('/subscriptions')
+    .get(function(req, res) {
+      User.find({ username: req.decoded.username }).select('subscriptions').exec(function(err, subscriptions) {
+        if (err) res.send(err);
+
+        res.json(subscriptions);
+      });
+    })
+    .post(function(req, res) {
+      console.log("Start Post: " + req.body.url);
+      feedCtrl.add(req.body.url).then(function(data) {
+        User.update({ username: req.decoded.username }, { $addToSet: { 'subscriptions': data.id } },
+          function(err, user) {
+            if (err) res.send(err);
+
+            console.log(data.message + " " + data.id);
+            res.json({ message: data.message + ": " + data.id });
+          });
+      }).catch(function(error) {
+        console.log("Error: " + error);
+        res.json({ message: "ERROR: " + error });
+      });
+    });
+
+  // Access to all feeds in database
+  apiRouter.get('/admin/feeds/:feed_id', function(req, res) {
+    User.find({ feed_id: req.feed_id }, function(err, feed) {
+      if (err) res.send(err);
+
+      res.json(feed);
+    });
+  });
+
+  apiRouter.get('/admin/feeds', function(req, res) {
+    Feed.find({}, function(err, feeds) {
+      if (err) res.send(err);
+
+      res.json(feeds);
+    });
+  });
 
   // Get Logged in user information
   apiRouter.get('/me', function(req, res) {
