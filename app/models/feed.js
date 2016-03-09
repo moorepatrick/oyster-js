@@ -31,9 +31,9 @@ var FeedSchema = new Schema({
   filters: [],                                        // List of filters
   title: {type:String, required: true},
   description: String,
-  link: String,                                       // Url
-  altUrls: [String],                                 // Alternative Urls
-  xmlurl: String,
+  link: String,                                       // Website link
+  altUrls: [String],                                  // Alternative Urls
+  xmlurl: String,                                     // Feed link
   date: Date,                                         // Most Recent Update
   // pubDate: Date,                                   // Original Publish Date
   author: String,

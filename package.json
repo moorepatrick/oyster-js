@@ -33,6 +33,7 @@
     "morgan": "^1.7.0",
     "node-feedparser": "^1.0.1",
     "path": "^0.12.7",
-    "request": "^2.69.0"
+    "request": "^2.69.0",
+    "rss": "^1.2.1"
   }
 }
