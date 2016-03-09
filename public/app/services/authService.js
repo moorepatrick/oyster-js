@@ -1,3 +1,5 @@
+var api = '/api/v1';
+
 angular.module('authService', [])
 
 // Login and get user information
@@ -6,7 +8,7 @@ angular.module('authService', [])
 
   // Login user
   authFactory.login = function(username, password) {
-    return $http.post('/api/authenticate', {
+    return $http.post(api + '/authenticate', {
         username: username,
         password: password
       })
@@ -33,7 +35,7 @@ angular.module('authService', [])
   // Get the logged in user
   authFactory.getUser = function() {
     if (AuthToken.getToken()) {
-      return $http.get('/api/me', { cache: true });
+      return $http.get(api + '/me', { cache: true });
     } else {
       return $q.reject({
         message: 'User has no token.'

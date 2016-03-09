@@ -1,3 +1,5 @@
+var api = '/api/v1'
+
 angular.module('mainCtrl', [])
   .controller('mainController', function($rootScope, $location, Auth, $scope, $cacheFactory) {
     var vm = this;
@@ -38,6 +40,6 @@ angular.module('mainCtrl', [])
       Auth.logout();
       vm.user = '';
       $location.path('/login');
-      $cacheFactory.get('$http').remove('/api/me');
+      $cacheFactory.get('$http').remove(api + '/me');
     };
   });
