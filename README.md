@@ -12,14 +12,62 @@ Oyster is still in very early development and will have a lot of bugs and ineffi
 ## Example Site
 Coming Soon...
 
-## Models
-### User
+## Schema
+Much of the feed schema is based on the output from [node-feedparser](https://github.com/danmactough/node-feedparser#what-is-the-parsed-output-produced-by-feedparser)
+
+### UserSchema
 - name
 - username
 - password
+- admin - admin status
+- subscriptions - list of subscribed feeds
+- feeds - list of created filter feeds
+
+### SourceSchema
+- type - Atom or RSS (Not Implemented)
+- filters - List of filters
+- title
+- description
+- link
+- altUrls - List of alternative urls, eg. redirects
+- xmlurl - feed link
+- date
+- author
+- language
+- image
+  - url
+  - title
+copyright
+generator
+categories
+articles - Array of ArticleSchema objects
+
+### ArticleSchema
+- title
+- filtered - Removed by filter rule
+- include - Explicitly included by user, overrides filtered
+- description - Possibly full article
+- summary - Excerpt of article
+- origlink - Tracking Link
+- permalink - guid when isPermalink attribute is not false
+- date
+- pubdate
+- author
+- guid
+- categories - list of categories
+- source
+  - url
+  - title
+- enclosures - list of enclosed files
+  - url
+  - type
+  - length
+- meta - metadata from feed
 
 ## API
-### authenticate (/api/v1/authenticate)
+All paths are prefixed by /api/v1 where v1 represents the API version 1.
+
+### authenticate (/authenticate)
 #### POST
 retrieve token for future api calls
 - parameters
@@ -30,7 +78,7 @@ retrieve token for future api calls
   - message
   - token
 
-### users (/api/v1/users)
+### users (/users)
 All calls the the api require a token received from the server
 
 #### GET
@@ -48,7 +96,7 @@ Create new user
   - success: (boolean)
   - message
 
-### user (/api/v1/users/:user_id)
+### user (/users/:user_id)
 #### GET
 Get user information
 - return
@@ -65,6 +113,27 @@ Update user
 Delete user
 - return
   - message
+
+
+### feeds (/feeds) - Not Implemented
+#### GET
+Get all feeds user has created
+#### POST
+Create new user feed
+
+### feed (/feeds/:feed_id) - Not Implemented
+#### GET
+- Get single user feed
+#### PUT
+- Update user feed
+#### DELETE
+- Remove user feed
+
+### subscriptions (/subscriptions)
+#### GET
+- Get all feeds a user subscribes to
+#### POST
+- Add feed to users list of subscribed feeds
 
 ## Contributions
 If you are interested in helping out, please let me know.

@@ -7,7 +7,7 @@ var mongoose = require('mongoose'),
 var ArticleSchema = new Schema({
   title: String,
   filtered: {type: Boolean, default: false},           // Removed by filter rule
-  include: {type: Boolean, default: false},           // Explicitly included by user, overides filtered
+  include: {type: Boolean, default: false},           // Explicitly included by user, overrides filtered
   description: String,                                // Possibly full article
   summary: String,                                    // Excerpt of article
   origlink: String,                                   // Tracking Link
