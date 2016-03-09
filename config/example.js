@@ -7,5 +7,9 @@ module.exports = {
   },
   session: {
     secret: "changeThisToSomethingUnique"
+  },
+  site: {
+    feed_base: "http://www.example.com/feeds",
+    site_base: "http://www.example.com"
   }
 };
