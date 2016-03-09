@@ -207,7 +207,10 @@ module.exports = function(app, express) {
 
   apiRouter.route('/subscriptions')
     .get(function(req, res) {
-      User.find({ username: req.decoded.username }).select('subscriptions').exec(function(err, subscriptions) {
+      User.find({ username: req.decoded.username })
+      .populate('subscriptions', 'title')
+      .select('username subscriptions')
+      .exec(function(err, subscriptions) {
         if (err) res.send(err);
 
         res.json(subscriptions);
