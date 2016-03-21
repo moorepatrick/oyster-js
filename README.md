@@ -37,10 +37,10 @@ Much of the feed schema is based on the output from [node-feedparser](https://gi
 - image
   - url
   - title
-copyright
-generator
-categories
-articles - Array of ArticleSchema objects
+- copyright
+- generator
+- categories
+- articles - Array of ArticleSchema objects
 
 ### ArticleSchema
 - title
@@ -114,26 +114,53 @@ Delete user
 - return
   - message
 
-
-### feeds (/feeds) - Not Implemented
+### feeds (/feeds)
 #### GET
 Get all feeds user has created
-#### POST
+- return
+  - user id
+  - username
+  - array of feeds
+
+#### POST - Not Implemented
 Create new user feed
 
-### feed (/feeds/:feed_id) - Not Implemented
+### feed (/feeds/:feed_id)
 #### GET
-- Get single user feed
-#### PUT
-- Update user feed
-#### DELETE
-- Remove user feed
+Get single user feed
+- return
+  - xml file or error
+
+#### PUT - Not Implemented
+Update user feed
+
+#### DELETE - Not Implemented
+Remove user feed
 
 ### subscriptions (/subscriptions)
 #### GET
-- Get all feeds a user subscribes to
+Get all feeds a user subscribes to
+- return
+    - username
+    - array of subscription feeds
+
 #### POST
-- Add feed to users list of subscribed feeds
+Add feed to users list of subscribed feeds
+- parameters
+  - url
+- return
+  - success message
+
+### subscriptions (/subscriptions/:feed_id)
+#### GET
+Get feed information
+- return
+  - feed
+
+#### DELETE
+Delete feed
+- return
+  - success message
 
 ## Contributions
 If you are interested in helping out, please let me know.
