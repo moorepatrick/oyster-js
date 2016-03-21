@@ -1,0 +1,29 @@
+<div class="page-header">
+  <h1>Subscription Details</h1>
+</div>
+<a ng-href="/subscriptions" class="btn btn-default">Back</a>
+<div>
+  <h2>{{subscription.subscriptionData.title}}</h2>
+  <img ng-src="{{subscription.subscriptionData.image.url}}" width=200 height=200/>
+  <p>Link:
+    <a ng-href="subscription.subscriptionData.link"> {{subscription.subscriptionData.link}}</a></p>
+  <p>{{subscription.subscriptionData.description}}</p>
+  <p>Date:
+    {{subscription.subscriptionData.Date}}</p>
+
+  <div ng-repeat="item in subscription.subscriptionData.articles">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">{{item.title}}</h3> {{item.pubdate | date: 'medium'}}
+      </div>
+      <div class="panel-body">
+
+        <div data-ng-bind-html="item.description"></div>
+
+        <p>
+          <a ng-href="item.origlink">{{item.origlink}}</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
