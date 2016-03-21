@@ -211,14 +211,26 @@ apiRouter.route('/feeds')
   });
 
 apiRouter.route('/subscriptions/:feed_id')
+  .get(function(req, res){
+    SourceFeed.findById(req.params.feed_id, function(err, feed) {
+        if (!feed) res.json({ message: "Feed Not Found" });
+
+        res.json(feed);
+
+      });
+  })
   .delete(function(req, res) {
-    res.json({ message: 'Not yet implemented' });
+    SourceFeed.remove({_id: req.params.feed_id}, function(err, feed){
+      if (err) res.send(err);
+
+      res.json({ message: 'Feed Deleted' });
+    });
   });
 
 apiRouter.route('/subscriptions')
   .get(function(req, res) {
     User.find({ username: req.decoded.username })
-      .populate('subscriptions', 'title')
+      .populate('subscriptions', 'title link')
       .select('username subscriptions')
       .exec(function(err, subscriptions) {
         if (err) res.send(err);
@@ -229,6 +241,7 @@ apiRouter.route('/subscriptions')
   .post(function(req, res) {
     console.log("Start Post: " + req.body.url);
     feedCtrl.add(req.body.url).then(function(data) {
+      console.log("Update User List")
       User.update({ username: req.decoded.username }, { $addToSet: { 'subscriptions': data.id } },
         function(err, user) {
           if (err) res.send(err);

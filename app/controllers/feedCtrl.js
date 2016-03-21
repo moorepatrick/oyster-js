@@ -125,6 +125,7 @@ function add(url) {
       } else { // Feed not found in DB
         console.log("Add Populate");
         populateFeed(url).then(function(feedId) {
+            console.log("Populate Done")
             resolve({
               message: "Inserted Feed",
               id: feedId
