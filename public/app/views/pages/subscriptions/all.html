@@ -1,0 +1,43 @@
+<div class="page-header">
+  <h1>
+    Subscriptions
+    <a href="/subscriptions/add" class="btn btn-default">
+      <span class="glyphicon glyphicon-plus"></span>
+      New Subscription
+    </a>
+  </h1>
+</div>
+<!-- LOADING MESSAGE -->
+<div class="jumbotron text-center" ng-show="subscription.processing">
+  <span class="glyphicon glyphicon-repeat spinner"></span>
+  <p>Loading Subscriptions...</p>
+</div>
+<table class="table table-bordered table-striped" ng-show="subscription.subscriptions">
+  <thead>
+    <tr>
+      <th>_id</th>
+      <th>Title</th>
+      <th>URL</th>
+      <th class="col-sm-2"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- LOOP OVER THE USERS -->
+    <tr ng-repeat="feed in subscription.subscriptions">
+      <td>{{ feed._id }}</td>
+      <td>{{ feed.title }}</td>
+      <td>{{ feed.link }}</td>
+      <td class="col-sm-2">
+        <a ng-href="/subscriptions/{{ feed._id }}" class="btn btn-primary">View</a>
+        <a href="#" ng-click="subscription.deleteSubscription(feed._id)" class="btn btn-danger">Delete</a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div class="row show-hide-message" ng-show="subscription.message">
+  <div class="col-sm-6 col-sm-offset-2">
+    <div class="alert alert-info">
+      {{ subscription.message }}
+    </div>
+  </div>
+</div>

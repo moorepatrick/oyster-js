@@ -29,6 +29,24 @@ angular.module('app.routes', ['ngRoute'])
     controllerAs: 'admin'
   })
 
+  .when('/subscriptions/', {
+    templateUrl: 'app/views/pages/subscriptions/all.html',
+    controller: 'subscriptionController',
+    controllerAs: 'subscription'
+  })
+
+  .when('/subscriptions/add', {
+    templateUrl: 'app/views/pages/subscriptions/add.html',
+    controller: 'subscriptionAddController',
+    controllerAs: 'subscription'
+  })
+
+  .when('/subscriptions/:feed_id', {
+    templateUrl: 'app/views/pages/subscriptions/detail.html',
+    controller: 'subscriptionDetailController',
+    controllerAs: 'subscription'
+  })
+
   .when('/users', {
     templateUrl: 'app/views/pages/users/all.html',
     controller: 'userController',
