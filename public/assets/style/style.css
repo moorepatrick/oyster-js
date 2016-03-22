@@ -9,6 +9,11 @@ header .navbar {
   border-radius: 0;
 }
 
+/* UI Bootstrap Custom
+====================== */
+
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
 /* NGANIMATE
 ====================== */
 
