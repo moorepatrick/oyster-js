@@ -6,24 +6,23 @@
   <h2>{{subscription.subscriptionData.title}}</h2>
   <img ng-src="{{subscription.subscriptionData.image.url}}" width=200 height=200/>
   <p>Link:
-    <a ng-href="subscription.subscriptionData.link"> {{subscription.subscriptionData.link}}</a></p>
+    <a href={{subscription.subscriptionData.link}}>
+      {{subscription.subscriptionData.link}}</a>
+  </p>
   <p>{{subscription.subscriptionData.description}}</p>
   <p>Date:
     {{subscription.subscriptionData.Date}}</p>
 
-  <div ng-repeat="item in subscription.subscriptionData.articles">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title">{{item.title}}</h3> {{item.pubdate | date: 'medium'}}
-      </div>
-      <div class="panel-body">
-
-        <div data-ng-bind-html="item.description"></div>
+  <uib-accordion close-others="false">
+    <uib-accordion-group ng-repeat="item in subscription.subscriptionData.articles" is-open="status.open">
+      <uib-accordion-heading>
+        <i class="glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i> <strong>{{item.title}}:</strong> {{item.pubdate | date: 'medium'}} 
+      </uib-accordion-heading>
+      <div data-ng-bind-html="item.description"></div>
 
         <p>
-          <a ng-href="item.origlink">{{item.origlink}}</a>
+          <a href={{item.origlink}}>{{item.origlink}}</a>
         </p>
-      </div>
-    </div>
-  </div>
+    </uib-accordion-group>
+  </uib-accordion>
 </div>
