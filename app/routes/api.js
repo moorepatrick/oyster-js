@@ -2,7 +2,7 @@ var User = require('../models/user'),
   Feed = require('../models/feed').Schema,
   SourceFeed = require('../models/feed').sourceFeed,
   jwt = require('jsonwebtoken'),
-  feedCtrl = require('../controllers/feedCtrl'),
+  subscriptionCtrl = require('../controllers/subscriptionCtrl'),
   rssCtrl = require('../controllers/rssCtrl'),
   path = require('path'),
   config = require('config');
@@ -240,7 +240,7 @@ apiRouter.route('/subscriptions')
   })
   .post(function(req, res) {
     console.log("Start Post: " + req.body.url);
-    feedCtrl.add(req.body.url).then(function(data) {
+    subscriptionCtrl.add(req.body.url).then(function(data) {
       console.log("Update User List")
       User.update({ username: req.decoded.username }, { $addToSet: { 'subscriptions': data.id } },
         function(err, user) {
