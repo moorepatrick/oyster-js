@@ -210,8 +210,11 @@ module.exports = function(app, express) {
       });
     })
     .delete(function(req, res) {
-    SourceFeed.remove({_id: req.params.feed_id}, function(err, feed){
-      if (err) res.send(err);
+      // Remove feed from users subscriptions list, but not Source Feeds
+      User.findOneAndUpdate({ username: req.decoded.username }, { $pull: { 'subscriptions': { _id: req.params.feed_id } } }, function(err) {
+        if (err) {
+          res.send(err);
+        }
 
         res.json({ message: 'Subscription: ' + req.params.feed_id + ' removed' });
       });
