@@ -51,7 +51,7 @@ module.exports = function(app, express) {
           // Return token
           res.json({
             success: true,
-            message: 'Enjoy your token!',
+            message: 'Authenticated',
             token: token
           });
         }
@@ -61,9 +61,6 @@ module.exports = function(app, express) {
 
   // Route Middleware to verify token
   apiRouter.use(function(req, res, next) {
-    // do logging
-    console.log('Someone just came to the app!');
-
     // Check for token
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
 
@@ -94,7 +91,7 @@ module.exports = function(app, express) {
   // GET /api
   apiRouter.get('/', function(req, res) {
     res.json({
-      message: "hooray! welcome to the api"
+      message: "Oyster JS API v1.0"
     });
   });
 
@@ -168,7 +165,7 @@ module.exports = function(app, express) {
       });
     });
 
-  // Users filtered feeds
+  // User's filtered feeds
   apiRouter.route('/feeds/:feed_id')
     .get(function(req, res) {
       OutputFeed.findById(req.params.feed_id, function(err, feed) {
@@ -193,6 +190,7 @@ module.exports = function(app, express) {
           res.json(feeds);
         });
     })
+    // Add feed to users feeds list
     .post(function(req, res) {
     console.log(req.method);
     return res.json({
@@ -201,6 +199,7 @@ module.exports = function(app, express) {
           });
     });
 
+  // Subscribed feeds (Source Feeds)
   apiRouter.route('/subscriptions/:feed_id')
     .get(function(req, res) {
       SourceFeed.findById(req.params.feed_id, function(err, feed) {
@@ -214,7 +213,7 @@ module.exports = function(app, express) {
     SourceFeed.remove({_id: req.params.feed_id}, function(err, feed){
       if (err) res.send(err);
 
-      res.json({ message: 'Feed Deleted' });
+        res.json({ message: 'Subscription: ' + req.params.feed_id + ' removed' });
       });
     });
 
