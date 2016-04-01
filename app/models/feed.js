@@ -28,6 +28,7 @@ var ArticleSchema = new Schema({
 var FeedSchema = new Schema({
   //feed_id: {type: Number, index: { unique: true }},   // Unique Feed ID
   type: String,                                       // Atom or RSS
+  lastBuildDate: Date,
   filters: [],                                        // List of filters
   title: {type:String, required: true},
   description: String,

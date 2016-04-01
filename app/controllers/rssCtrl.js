@@ -32,6 +32,8 @@ function generateFeed(feedObject) {
       feed.item(feedItem);
     });
 
+
+
     var xml = feed.xml({ indent: '  ' });
     fs.writeFile(fileName, xml, function(err) {
       if (err){
@@ -40,7 +42,7 @@ function generateFeed(feedObject) {
       }
 
       console.log(fileName + " Saved");
-      resolve("Saved");
+      resolve({message: "Saved", date: Date.now()});
     });
   });
 

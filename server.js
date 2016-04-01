@@ -35,6 +35,10 @@ mongoose.connect('mongodb://' + config.dbConfig.host + ':' +
 var apiRoutes = require('./app/routes/api')(app, express);
 app.use('/api/v1', apiRoutes);
 
+// RSS Routes
+var rssRoutes = require('./app/routes/rss')(app, express);
+app.use('/rss', rssRoutes);
+
 // Catchall
 app.get('*', function(req, res) {
   res.sendFile(path.join(__dirname + '/public/index.html'));
