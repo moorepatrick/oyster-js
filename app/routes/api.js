@@ -239,7 +239,7 @@ module.exports = function(app, express) {
     })
     .delete(function(req, res) {
       // Remove feed from users subscriptions list, but not Source Feeds
-      User.findOneAndUpdate({ username: req.decoded.username }, { $pull: { 'subscriptions': { _id: req.params.feed_id } } }, function(err) {
+      User.findOneAndUpdate({ username: req.decoded.username }, { $pull: { 'subscriptions': req.params.feed_id } }, function(err, subscription) {
         if (err) {
           res.send(err);
         }
