@@ -4,7 +4,6 @@ var RSS = require('rss'),
   config = require('config');
 
 function generateFeed(feedObject) {
-
   var promise = new Promise(function(resolve, reject) {
     console.log("Generate Feed");
     var fileName = "./public/feeds/" + feedObject._id + ".xml";
@@ -26,23 +25,21 @@ function generateFeed(feedObject) {
         url: article.origlink,
         guid: config.site.feed_base + "/" + article._id,
         date: article.pubdate,
-        enclosures: _.cloneDeep(article.enclosures)
+        enclosure: _.cloneDeep(article.enclosures[0]) // node-rss supports one enclosure
       };
 
       feed.item(feedItem);
     });
 
-
-
     var xml = feed.xml({ indent: '  ' });
     fs.writeFile(fileName, xml, function(err) {
-      if (err){
+      if (err) {
         console.log(err);
         reject(err);
       }
 
       console.log(fileName + " Saved");
-      resolve({message: "Saved", date: Date.now()});
+      resolve({ message: "Saved", date: Date.now() });
     });
   });
 

@@ -11,8 +11,8 @@ module.exports = function(app, express) {
   rssRouter.route('/:feed_id')
     .get(function(req, res) {
       // Source Feed Regeneration
-      SourceFeed.findById(req.params.feed_id, function(err, feed) {
-        if (!feed) res.json({ message: "Feed Not Found" });
+      OutputFeed.findById(req.params.feed_id, function(err, feed) {
+        if (!feed) return res.json({ message: "Feed Not Found" });
 
           //console.log(feed)
         if (Date.parse(feed.lastBuildDate) < (Date.now() - 900000)) {
