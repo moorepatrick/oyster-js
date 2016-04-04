@@ -18,8 +18,20 @@ angular.module('app.routes', ['ngRoute'])
   })
 
   .when('/feeds',{
-    templateUrl: 'app/views/pages/feeds.html',
+    templateUrl: 'app/views/pages/feeds/all.html',
     controller: 'feedController',
+    controllerAs: 'feed'
+  })
+
+  .when('/feeds/add', {
+    templateUrl: 'app/views/pages/feeds/add.html',
+    controller: 'feedAddController',
+    controllerAs: 'feed'
+  })
+
+  .when('/feeds/:feed_id', {
+    templateUrl: 'app/views/pages/feeds/detail.html',
+    controller: 'feedDetailController',
     controllerAs: 'feed'
   })
 
