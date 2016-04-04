@@ -13,7 +13,7 @@ function add(feedData, name) {
       url: "",
       altUrls: [],
       date: new Date(Date.now()),
-      lastBuildDate: new Date(Date.now()),
+      lastBuildDate: new Date(0),
       image: { url: "", title: "" },
       copyright: "",
       categories: "",
