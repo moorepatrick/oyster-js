@@ -9,7 +9,7 @@ var UserSchema = new Schema({
   password: { type: String, required: true, select: false },
   admin: {type: Boolean, require: true, default: false},
   subscriptions: [{type: Schema.Types.ObjectId, ref: 'SourceFeed'}],  // Array of Feed ID's
-  feeds: [Number] // Array of Output Feed ID's
+  feeds: [{type: Schema.Types.ObjectId, ref: 'OutputFeed'}] // Array of Output Feed ID's
 });
 
 //Hash password before save

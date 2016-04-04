@@ -1,7 +1,9 @@
 var User = require('../models/user'),
   Feed = require('../models/feed').Schema,
+  OutputFeed = require('../models/feed').outputFeed,
   SourceFeed = require('../models/feed').sourceFeed,
   jwt = require('jsonwebtoken'),
+  feedCtrl = require('../controllers/feedCtrl'),
   subscriptionCtrl = require('../controllers/subscriptionCtrl'),
   path = require('path'),
   config = require('config');
@@ -179,12 +181,25 @@ module.exports = function(app, express) {
       res.json({ message: req.method + ': ' + req.url + ' not yet implemented' });
     })
     .delete(function(req, res) {
-    res.json({ message: req.method + ': ' + req.url + ' not yet implemented' });
-  });
+      // Remove feed from Output Feeds
+      OutputFeed.remove({ _id: req.params.feed_id }, function(err, feed) {
+        if (err) res.send(err);
+
+        // Remove feed from user's feeds list
+        User.update({ username: req.decoded.username }, { $pull: { feeds: req.params.feed_id } }, function(err, raw) {
+          if (err) res.send(err)
+
+          res.json({ message: 'Feed Deleted' });
+        })
+      });
+    });
 
   apiRouter.route('/feeds')
     .get(function(req, res) {
-    User.find({ username: req.decoded.username }).select('-_id username feeds').exec(function(err, feeds) {
+      User.find({ username: req.decoded.username })
+        .populate('feeds', 'title')
+        .select('-_id username feeds')
+        .exec(function(err, feeds) {
           if (err) res.send(err);
 
           res.json(feeds);
@@ -192,11 +207,24 @@ module.exports = function(app, express) {
     })
     // Add feed to users feeds list
     .post(function(req, res) {
-    console.log(req.method);
-    return res.json({
-      url: req.body.url,
-      message: req.method + ': ' + req.url + ' not yet implemented'
-          });
+      console.log("Start Feed Creation: " + req.body.feedData);
+
+      feedCtrl.add(req.body.feedData, req.decoded.name)
+        .then(function(data) {
+          console.log("Update Feed List")
+          User.update({ username: req.decoded.username }, { $addToSet: { 'feeds': data.id } },
+            function(err, user) {
+              if (err) res.send(err);
+
+              console.log(data.message + " " + data.id);
+              res.json({ message: data.message + ": " + data.id });
+            });
+        }).catch(function(error) {
+          console.log("Error: " + error);
+          res.json({ message: "Error: " + error });
+        });
+
+      console.log(req.method);
     });
 
   // Subscribed feeds (Source Feeds)
