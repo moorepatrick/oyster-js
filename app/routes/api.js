@@ -197,7 +197,7 @@ module.exports = function(app, express) {
   apiRouter.route('/feeds')
     .get(function(req, res) {
       User.find({ username: req.decoded.username })
-        .populate('feeds', 'title')
+        .populate('feeds', 'title link' )
         .select('-_id username feeds')
         .exec(function(err, feeds) {
           if (err) res.send(err);

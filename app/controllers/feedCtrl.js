@@ -22,6 +22,8 @@ function add(feedData, name) {
       generator: "Oyster v0.1 (http://oysterjs.com)",
     });
 
+    newFeed.link = "/rss/" + newFeed._id;
+
     Promise.all(populate(feedData))
       .then(function(values) {
         values.forEach(function(value) {
