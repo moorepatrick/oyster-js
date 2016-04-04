@@ -1,23 +1,25 @@
 <div class="page-header">
 <h1>Add Subscription</h1>
 </div>
+<a ng-href="/subscriptions" class="btn btn-default">Back</a>
+<div>
 <form class="form-horizontal" ng-submit="subscription.addSubscription()">
 
   <div class="form-group">
-    <label class="col-sm-2 control-label">URL</label>
+    <label class="col-sm-3 control-label">URL</label>
     <div class="col-sm-6">
       <input type="text" class="form-control" ng-model="subscription.subscriptionData.url">
     </div>
   </div>
 
   <div class="form-group">
-    <div class="col-sm-offset-2 col-sm-6">
+    <div class="col-sm-offset-3 col-sm-6">
       <button type="submit" class="btn btn-success btn-lg btn-block">Add Feed</button>
     </div>
   </div>
 </form>
 <div class="row show-hide-message" ng-show="subscription.message">
-  <div class="col-sm-6 col-sm-offset-2">
+  <div class="col-sm-6 col-sm-offset-3">
     <div class="alert alert-info">
       {{ subscription.message }}
     </div>
