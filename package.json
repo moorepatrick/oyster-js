@@ -35,5 +35,13 @@
     "path": "^0.12.7",
     "request": "^2.69.0",
     "rss": "^1.2.1"
+  },
+  "devDependencies": {
+    "del": "^2.2.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-ng-annotate": "^2.0.0",
+    "gulp-nodemon": "^2.0.6",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-uglify": "^1.5.3"
   }
 }

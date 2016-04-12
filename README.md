@@ -12,6 +12,14 @@ Oyster is still in very early development and will have a lot of bugs and ineffi
 ## Example Site
 Coming Soon...
 
+## Getting Started
+
+### Development Mode
+Copy and edit the `example.js` config file in `/config`. Save it as `dev.js`. Next run the following commands from the root directory of the project.
+
+    npm install  # install node dependencies
+    gulp develop # build project into the _public folder
+
 ## Schema
 Much of the feed schema is based on the output from [node-feedparser](https://github.com/danmactough/node-feedparser#what-is-the-parsed-output-produced-by-feedparser)
 

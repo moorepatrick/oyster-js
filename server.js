@@ -25,7 +25,7 @@ app.use(function(req, res, next) {
 app.use(morgan('dev'));
 
 // Static Files
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/_public'));
 
 // DB Configuaration
 mongoose.connect('mongodb://' + config.dbConfig.host + ':' +
@@ -41,7 +41,7 @@ app.use('/rss', rssRoutes);
 
 // Catchall
 app.get('*', function(req, res) {
-  res.sendFile(path.join(__dirname + '/public/index.html'));
+  res.sendFile(path.join(__dirname + '/_public/index.html'));
 });
 
 // Start Server
