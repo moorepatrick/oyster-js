@@ -1,6 +1,7 @@
 var _ = require('lodash'),
   OutputFeed = require('../models/feed').outputFeed,
-  SourceFeed = require('../models/feed').sourceFeed;
+  SourceFeed = require('../models/feed').sourceFeed,
+  config = require('config');
 
 // Create new user feed
 function add(feedData, name) {
@@ -10,8 +11,7 @@ function add(feedData, name) {
       title: feedData.title,
       description: feedData.title,
       link: "",
-      url: "",
-      altUrls: [],
+      xmlUrl: "",
       date: new Date(Date.now()),
       lastBuildDate: new Date(0),
       image: { url: "", title: "" },
@@ -19,7 +19,7 @@ function add(feedData, name) {
       categories: "",
       author: name,
       language: 'en',
-      generator: "Oyster v0.1 (http://oysterjs.com)",
+      generator: "Oyster v" + config.version +" (http://oysterjs.com)",
     });
 
     newFeed.link = "/rss/" + newFeed._id;
@@ -28,9 +28,14 @@ function add(feedData, name) {
       .then(function(values) {
         values.forEach(function(value) {
           value.articles.forEach(function(article) {
-            newFeed.articles.push(article);
-          })
-        })
+            var newArticle = {
+              article: article,
+              included: false,
+              filtered: false
+            };
+            newFeed.articles.push(newArticle);
+          });
+        });
       })
       .then(function(values) {
         _.orderBy(newFeed.articles, 'pubdate', 'desc');

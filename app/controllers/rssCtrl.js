@@ -6,26 +6,27 @@ var RSS = require('rss'),
 function generateFeed(feedObject) {
   var promise = new Promise(function(resolve, reject) {
     console.log("Generate Feed");
-    var fileName = "./public/feeds/" + feedObject._id + ".xml";
+    var fileName = "./_public/feeds/" + feedObject._id + ".xml";
 
     var feed = new RSS({
       title: feedObject.title,
       description: feedObject.description,
-      generator: "Oyster v0.1 (http://oysterjs.com)",
+      generator: "Oyster v" + config.version + " (http://oysterjs.com)",
       feed_url: config.site.feed_base + "/" + feedObject._id + ".xml",
       site_url: config.site.site_base,
       pubDate: feedObject.pubdate,
       language: 'en'
     });
 
-    feedObject.articles.forEach(function(article) {
+    feedObject.articles.forEach(function(item) {
+
       var feedItem = {
-        title: article.title,
-        description: article.description,
-        url: article.origlink,
-        guid: config.site.feed_base + "/" + article._id,
-        date: article.pubdate,
-        enclosure: _.cloneDeep(article.enclosures[0]) // node-rss supports one enclosure
+        title: item.article.title,
+        description: item.article.description,
+        url: item.article.origlink,
+        guid: item.article.guid,
+        date: item.article.pubdate,
+        enclosure: _.cloneDeep(item.article.enclosures[0]) // node-rss supports one enclosure
       };
 
       feed.item(feedItem);

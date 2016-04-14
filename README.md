@@ -28,18 +28,38 @@ Much of the feed schema is based on the output from [node-feedparser](https://gi
 - username
 - password
 - admin - admin status
-- subscriptions - list of subscribed feeds
-- feeds - list of created filter feeds
+- sourceFeeds - list of subscribed feeds
+- outputFeeds - list of created filter feeds
 
 ### SourceSchema
 - type - Atom or RSS (Not Implemented)
-- filters - List of filters
 - title
+- lastRetrieved
 - description
 - link
 - altUrls - List of alternative urls, eg. redirects
-- xmlurl - feed link
+- xmlUrl - feed link
 - date
+- author
+- language
+- image
+  - url
+  - title
+- localImage
+- copyright
+- generator
+- categories
+- articles - Array of ArticleSchema objects
+
+### OutputSchema
+- type - Atom or RSS (Not Implemented)
+- filters
+- title
+- description
+- link
+- xmlUrl - feed link
+- date
+- lastBuildDate
 - author
 - language
 - image
@@ -48,12 +68,11 @@ Much of the feed schema is based on the output from [node-feedparser](https://gi
 - copyright
 - generator
 - categories
-- articles - Array of ArticleSchema objects
+- articles - Array of OutputArticleSchema objects
 
 ### ArticleSchema
 - title
-- filtered - Removed by filter rule
-- include - Explicitly included by user, overrides filtered
+- parentId
 - description - Possibly full article
 - summary - Excerpt of article
 - origlink - Tracking Link
@@ -62,7 +81,7 @@ Much of the feed schema is based on the output from [node-feedparser](https://gi
 - pubdate
 - author
 - guid
-- categories - list of categories
+- categories - array of categories
 - source
   - url
   - title
@@ -71,6 +90,11 @@ Much of the feed schema is based on the output from [node-feedparser](https://gi
   - type
   - length
 - meta - metadata from feed
+
+### OutputArticleSchema
+- article - ArticleSchema
+- filtered - Removed by filter rule
+- included - Explicitly included by user, overrides filtered
 
 ## API
 All paths are prefixed by /api/v1 where v1 represents the API version 1.
@@ -122,7 +146,7 @@ Delete user
 - return
   - message
 
-### feeds (/feeds)
+### feeds (/output_feeds)
 #### GET
 Get all feeds user has created
 - return
@@ -133,7 +157,7 @@ Get all feeds user has created
 #### POST - Not Implemented
 Create new user feed
 
-### feed (/feeds/:feed_id)
+### feed (/output_feeds/:feed_id)
 #### GET
 Get single user feed
 - return
@@ -145,7 +169,7 @@ Update user feed
 #### DELETE - Not Implemented
 Remove user feed
 
-### subscriptions (/subscriptions)
+### subscriptions (/source_feeds)
 #### GET
 Get all feeds a user subscribes to
 - return
@@ -159,7 +183,7 @@ Add feed to users list of subscribed feeds
 - return
   - success message
 
-### subscriptions (/subscriptions/:feed_id)
+### subscriptions (/source_feeds/:feed_id)
 #### GET
 Get feed information
 - return

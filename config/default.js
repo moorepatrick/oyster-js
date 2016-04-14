@@ -7,5 +7,6 @@ module.exports = {
   },
   session: {
     secret: "changeThisToSomethingUnique"
-  }
+  },
+  version: "0.1"
 };

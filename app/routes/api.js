@@ -1,10 +1,9 @@
 var User = require('../models/user'),
-  Feed = require('../models/feed').Schema,
   OutputFeed = require('../models/feed').outputFeed,
   SourceFeed = require('../models/feed').sourceFeed,
   jwt = require('jsonwebtoken'),
-  feedCtrl = require('../controllers/feedCtrl'),
-  subscriptionCtrl = require('../controllers/subscriptionCtrl'),
+  outputFeedCtrl = require('../controllers/outputFeedCtrl'),
+  sourceFeedCtrl = require('../controllers/sourceFeedCtrl'),
   path = require('path'),
   config = require('config');
 
@@ -168,13 +167,14 @@ module.exports = function(app, express) {
     });
 
   // User's filtered feeds
-  apiRouter.route('/feeds/:feed_id')
+  apiRouter.route('/output_feeds/:feed_id')
     .get(function(req, res) {
-      OutputFeed.findById(req.params.feed_id, function(err, feed) {
+      OutputFeed.findById(req.params.feed_id)
+      .populate({path: 'articles', select: '-_id', populate: {path: 'article', select: '-_id -meta'} })
+      .exec(function(err, feed) {
         if (!feed) res.json({ message: "Feed Not Found" });
 
         res.json(feed);
-
       });
     })
     .put(function(req, res) {
@@ -186,7 +186,7 @@ module.exports = function(app, express) {
         if (err) res.send(err);
 
         // Remove feed from user's feeds list
-        User.update({ username: req.decoded.username }, { $pull: { feeds: req.params.feed_id } }, function(err, raw) {
+        User.update({ username: req.decoded.username }, { $pull: { outputFeeds: req.params.feed_id } }, function(err, raw) {
           if (err) res.send(err)
 
           res.json({ message: 'Feed Deleted' });
@@ -194,11 +194,11 @@ module.exports = function(app, express) {
       });
     });
 
-  apiRouter.route('/feeds')
+  apiRouter.route('/output_feeds')
     .get(function(req, res) {
       User.find({ username: req.decoded.username })
-        .populate('feeds', 'title link' )
-        .select('-_id username feeds')
+        .populate('outputFeeds', 'title link' )
+        .select('-_id username outputFeeds')
         .exec(function(err, feeds) {
           if (err) res.send(err);
 
@@ -209,10 +209,10 @@ module.exports = function(app, express) {
     .post(function(req, res) {
       console.log("Start Feed Creation: " + req.body.feedData);
 
-      feedCtrl.add(req.body.feedData, req.decoded.name)
+      outputFeedCtrl.add(req.body.feedData, req.decoded.name)
         .then(function(data) {
           console.log("Update Feed List")
-          User.update({ username: req.decoded.username }, { $addToSet: { 'feeds': data.id } },
+          User.update({ username: req.decoded.username }, { $addToSet: { 'outputFeeds': data.id } },
             function(err, user) {
               if (err) res.send(err);
 
@@ -228,9 +228,11 @@ module.exports = function(app, express) {
     });
 
   // Subscribed feeds (Source Feeds)
-  apiRouter.route('/subscriptions/:feed_id')
+  apiRouter.route('/source_feeds/:feed_id')
     .get(function(req, res) {
-      SourceFeed.findById(req.params.feed_id, function(err, feed) {
+      SourceFeed.findById(req.params.feed_id)
+      .populate('articles')
+      .exec(function(err, feed) {
         if (!feed) res.json({ message: "Feed Not Found" });
 
         res.json(feed);
@@ -239,31 +241,31 @@ module.exports = function(app, express) {
     })
     .delete(function(req, res) {
       // Remove feed from users subscriptions list, but not Source Feeds
-      User.findOneAndUpdate({ username: req.decoded.username }, { $pull: { 'subscriptions': req.params.feed_id } }, function(err, subscription) {
+      User.findOneAndUpdate({ username: req.decoded.username }, { $pull: { 'sourceFeeds': req.params.feed_id } }, function(err, sourceFeed) {
         if (err) {
           res.send(err);
         }
 
-        res.json({ message: 'Subscription: ' + req.params.feed_id + ' removed' });
+        res.json({ message: 'Source Feed: ' + req.params.feed_id + ' removed' });
       });
     });
 
-  apiRouter.route('/subscriptions')
+  apiRouter.route('/source_feeds')
     .get(function(req, res) {
       User.find({ username: req.decoded.username })
-        .populate('subscriptions', 'title link')
-        .select('username subscriptions')
-        .exec(function(err, subscriptions) {
+        .populate('sourceFeeds', 'title link')
+        .select('username sourceFeeds')
+        .exec(function(err, sourceFeeds) {
           if (err) res.send(err);
 
-          res.json(subscriptions);
+          res.json(sourceFeeds);
         });
     })
     .post(function(req, res) {
       console.log("Start Post: " + req.body.url);
-      subscriptionCtrl.add(req.body.url).then(function(data) {
+      sourceFeedCtrl.add(req.body.url).then(function(data) {
         console.log("Update User List")
-        User.update({ username: req.decoded.username }, { $addToSet: { 'subscriptions': data.id } },
+        User.update({ username: req.decoded.username }, { $addToSet: { 'sourceFeeds': data.id } },
           function(err, user) {
             if (err) res.send(err);
 
