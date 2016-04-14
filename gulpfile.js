@@ -50,21 +50,22 @@ gulp.task('views', function() {
     .pipe(gulp.dest('./_public/app/views/'));
 });
 
-gulp.task('develop', function() {
+gulp.task('develop', ['watch'], function() {
   nodemon({
       env: { 'NODE_ENV': 'dev' },
       script: 'server.js',
-      ext: 'js html css'
+      ext: 'js html css',
+      ignore: ['_public/*']
     }).on('start', function() {
       console.log('Start gulp-nodemon');
       return ['watch'];
     })
-    .on('change', function() {
-      console.log('Change in gulp-nodemon');
+    .on('change', function(event) {
+      console.log('Change in gulp-nodemon: ' + event);
       return ['watch'];
     })
-    .on('restart', function() {
-      console.log('Restarted');
+    .on('restart', function(event) {
+      console.log('Restarted: ' + event);
       return ['watch'];
     });
 });
