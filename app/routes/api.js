@@ -278,22 +278,22 @@ module.exports = function(app, express) {
       });
     });
 
-  // Access to all feeds in database
-  apiRouter.get('/admin/feeds/:feed_id', function(req, res) {
-    User.find({ feed_id: req.feed_id }, function(err, feed) {
-      if (err) res.send(err);
-
-      res.json(feed);
-    });
-  });
-
-  apiRouter.get('/admin/feeds', function(req, res) {
-    Feed.find({}, function(err, feeds) {
-      if (err) res.send(err);
-
-      res.json(feeds);
-    });
-  });
+  // // Access to all feeds in database
+  // apiRouter.get('/admin/feeds/:feed_id', function(req, res) {
+  //   User.find({ feed_id: req.feed_id }, function(err, feed) {
+  //     if (err) res.send(err);
+  //
+  //     res.json(feed);
+  //   });
+  // });
+  //
+  // apiRouter.get('/admin/feeds', function(req, res) {
+  //   Feed.find({}, function(err, feeds) {
+  //     if (err) res.send(err);
+  //
+  //     res.json(feeds);
+  //   });
+  // });
 
   // Get Logged in user information
   apiRouter.get('/me', function(req, res) {
