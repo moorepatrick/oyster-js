@@ -57,17 +57,13 @@ var populateFeed = function(url) {
                 categories: meta.categories
             });
 
-            console.log("Feed ID: " + newFeed._id)
-
             articles.forEach(function(article) {
-              console.log(article);
+
               Article.findByIdAndUpdate(article, {$set: {parentId: newFeed._id}}, function(err){
                 if (err) {
                         console.log("Failed to add Parent ID to Article: " + err);
                         reject(err);
                     }
-                console.log("Parent: " + newFeed._id);
-                console.log("Child: " + article);
               });
                 newFeed.articles.push(article);
 

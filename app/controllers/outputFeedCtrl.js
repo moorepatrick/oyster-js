@@ -60,7 +60,7 @@ function populate(feedData) {
   var promises = [];
 
   // Create new promise for each source feed
-  feedData.feeds.forEach(function(feed_id) {
+  feedData.sourceFeeds.forEach(function(feed_id) {
     var p = new Promise(function(resolve, reject) {
       SourceFeed.findById(feed_id, 'articles', function(err, source) {
         if (err) {
