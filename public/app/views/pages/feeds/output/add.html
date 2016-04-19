@@ -4,20 +4,20 @@
 <a ng-href="/feeds" class="btn btn-default">Back</a>
 <div>
 
-<div class="jumbotron text-center" ng-show="feed.processing">
+<div class="jumbotron text-center" ng-show="outputFeed.processing">
   <span class="glyphicon glyphicon-repeat spinner"></span>
   <p>Loading Subscription List...</p>
 </div>
-<form class="form-horizontal" ng-submit="feed.addFeed()">
+<form class="form-horizontal" ng-submit="outputFeed.addFeed()">
   <div class="form-group">
     <label class="col-sm-3 control-label">Title</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" ng-model="feed.title">
+      <input type="text" class="form-control" ng-model="outputFeed.title">
     </div>
   </div>
   <div class="form-group">
     <div class="col-sm-6 col-sm-offset-3">
-    <div ng-repeat="item in feed.subscriptions">
+    <div ng-repeat="item in outputFeed.sourceFeeds">
       <label>
         <input type="checkbox" ng-model="item.selected"> {{item.title}} </label>
     </div>
@@ -29,8 +29,8 @@
     </div>
   </div>
 </form>
-<div class="row show-hide-message" ng-show="feed.message">
+<div class="row show-hide-message" ng-show="outputFeed.message">
   <div class="col-sm-6 col-sm-offset-3">
-    <div class="alert alert-info"> {{ feed.message }} </div>
+    <div class="alert alert-info"> {{ outputFeed.message }} </div>
   </div>
 </div>

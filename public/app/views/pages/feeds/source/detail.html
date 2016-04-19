@@ -1,20 +1,20 @@
 <div class="page-header">
-  <h1>Feed Details</h1>
+  <h1>Subscription Details</h1>
 </div>
-<a ng-href="/feeds" class="btn btn-default">Back</a>
+<a ng-href="/subscriptions" class="btn btn-default">Back</a>
 <div>
-  <h2>{{feed.feedData.title}}</h2>
-  <img ng-src="{{feed.feedData.image.url}}" width=200 height=200/>
+  <h2>{{sourceFeed.feedData.title}}</h2>
+  <img ng-src="{{sourceFeed.feedData.image.url}}" width=200 height=200/>
   <p>Link:
-    <a href={{feed.feedData.link}} target="_self">
-      http://127.0.0.1:8080{{feed.feedData.link}}</a>
+    <a href={{sourceFeed.feedData.link}}>
+      {{sourceFeed.feedData.link}}</a>
   </p>
-  <p>{{feed.feedData.description}}</p>
+  <p>{{sourceFeed.feedData.description}}</p>
   <p>Date:
-    {{feed.feedData.date | date: 'medium'}}</p>
+    {{sourceFeed.feedData.Date}}</p>
 
   <uib-accordion close-others="false">
-    <uib-accordion-group ng-repeat="item in feed.feedData.articles" is-open="status.open">
+    <uib-accordion-group ng-repeat="item in sourceFeed.feedData.articles | orderBy:'-article.pubdate'" is-open="status.open">
       <uib-accordion-heading>
         <i class="glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i> <strong>{{item.title}}:</strong> {{item.pubdate | date: 'medium'}}
       </uib-accordion-heading>

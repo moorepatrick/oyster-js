@@ -1,6 +1,6 @@
 var api = '/api/v1';
 
-angular.module('userService', [])
+angular.module('UserService', [])
 .factory('User', function($http){
   var userFactory = {};
 

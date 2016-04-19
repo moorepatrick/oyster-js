@@ -7,73 +7,73 @@ angular.module('app.routes', ['ngRoute'])
 
   .when('/login', {
     templateUrl: 'app/views/pages/login.html',
-    controller: 'mainController',
+    controller: 'MainController',
     controllerAs: 'login'
   })
 
   .when('/profile', {
     templateUrl: 'app/views/pages/profile.html',
-    controller: 'profileController',
+    controller: 'ProfileController',
     controllerAs: 'profile'
   })
 
-  .when('/feeds',{
-    templateUrl: 'app/views/pages/feeds/all.html',
-    controller: 'feedController',
-    controllerAs: 'feed'
+  .when('/feeds/',{
+    templateUrl: 'app/views/pages/feeds/output/all.html',
+    controller: 'OutputFeedController',
+    controllerAs: 'outputFeed'
   })
 
   .when('/feeds/add', {
-    templateUrl: 'app/views/pages/feeds/add.html',
-    controller: 'feedAddController',
-    controllerAs: 'feed'
+    templateUrl: 'app/views/pages/feeds/output/add.html',
+    controller: 'OutputFeedAddController',
+    controllerAs: 'outputFeed'
   })
 
   .when('/feeds/:feed_id', {
-    templateUrl: 'app/views/pages/feeds/detail.html',
-    controller: 'feedDetailController',
-    controllerAs: 'feed'
+    templateUrl: 'app/views/pages/feeds/output/detail.html',
+    controller: 'OutputFeedDetailController',
+    controllerAs: 'outputFeed'
   })
 
   .when('/admin',{
     templateUrl: 'app/views/pages/admin.html',
-    controller: 'adminController',
+    controller: 'AdminController',
     controllerAs: 'admin'
   })
 
   .when('/subscriptions/', {
-    templateUrl: 'app/views/pages/subscriptions/all.html',
-    controller: 'subscriptionController',
-    controllerAs: 'subscription'
+    templateUrl: 'app/views/pages/feeds/source/all.html',
+    controller: 'SourceFeedController',
+    controllerAs: 'sourceFeed'
   })
 
   .when('/subscriptions/add', {
-    templateUrl: 'app/views/pages/subscriptions/add.html',
-    controller: 'subscriptionAddController',
-    controllerAs: 'subscription'
+    templateUrl: 'app/views/pages/feeds/source/add.html',
+    controller: 'SourceFeedAddController',
+    controllerAs: 'sourceFeed'
   })
 
   .when('/subscriptions/:feed_id', {
-    templateUrl: 'app/views/pages/subscriptions/detail.html',
-    controller: 'subscriptionDetailController',
-    controllerAs: 'subscription'
+    templateUrl: 'app/views/pages/feeds/source/detail.html',
+    controller: 'SourceFeedDetailController',
+    controllerAs: 'sourceFeed'
   })
 
   .when('/users', {
     templateUrl: 'app/views/pages/users/all.html',
-    controller: 'userController',
+    controller: 'UserController',
     controllerAs: 'user'
   })
 
   .when('/users/create', {
     templateUrl: 'app/views/pages/users/single.html',
-    controller: 'userCreateController',
+    controller: 'UserCreateController',
     controllerAs: 'user'
   })
 
   .when('/users/:user_id', {
     templateUrl: 'app/views/pages/users/single.html',
-    controller: 'userEditController',
+    controller: 'UserEditController',
     controllerAs: 'user'
   })
 

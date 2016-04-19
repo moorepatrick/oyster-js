@@ -1,6 +1,6 @@
 var api = '/api/v1';
 
-angular.module('authService', [])
+angular.module('AuthService', [])
 
 // Login and get user information
 .factory('Auth', function($http, $q, AuthToken) {

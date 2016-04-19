@@ -1,5 +1,5 @@
-angular.module('profileCtrl', ['authService'])
-  .controller('profileController', function($routeParams, Auth) {
+angular.module('ProfileCtrl', ['AuthService'])
+  .controller('ProfileController', function($routeParams, Auth) {
     var vm = this;
 
     Auth.getUser()

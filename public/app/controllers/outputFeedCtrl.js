@@ -1,59 +1,59 @@
-angular.module('feedCtrl', ['feedService', 'subscriptionService'])
-  .controller('feedController', function(Feed) {
+angular.module('OutputFeedCtrl', ['OutputFeedService', 'SourceFeedService'])
+  .controller('OutputFeedController', function(OutputFeed) {
     var vm = this;
     vm.processing = true;
 
-    Feed.all()
+    OutputFeed.all()
       .success(function(data) {
         vm.processing = false;
-        vm.feeds = data[0].feeds;
+        vm.outputFeeds = data[0].outputFeeds;
       });
 
     vm.deleteFeed = function(id) {
       vm.proccessing = true;
 
-      Feed.delete(id)
+      OutputFeed.delete(id)
         .success(function(data) {
           vm.message = data.message;
           console.log(vm.message);
-          Feed.all()
+          OutputFeed.all()
             .success(function(data) {
               vm.processing = false;
-              vm.feeds = data[0].feeds;
+              vm.outputFeeds = data[0].outputFeeds;
             });
         });
     };
   })
-  .controller('feedAddController', function(Feed, Subscription) {
+  .controller('OutputFeedAddController', function(OutputFeed, SourceFeed) {
     var vm = this;
     vm.processing = true;
 
     // Get get all user subscriptions and set false selection status
-    Subscription.all()
+    SourceFeed.all()
       .success(function(data) {
         vm.title = "";
-        vm.subscriptions = data[0].subscriptions;
-        vm.subscriptions.forEach(function(item) {
+        vm.sourceFeeds = data[0].sourceFeeds;
+        vm.sourceFeeds.forEach(function(item) {
           item.selected = false;
         });
         vm.processing = false;
       });
 
-    // Add new user feed
+    // Add new output feed
     vm.addFeed = function() {
       vm.processing = true;
       vm.message = '';
       var selections = [];
 
-      // Collect selected subscription feed ids
-      vm.subscriptions.forEach(function(item) {
+      // Collect selected source feed ids
+      vm.sourceFeeds.forEach(function(item) {
         if (item.selected) {
           selections.push(item._id);
         }
       });
 
-      // Create and save feed in DB
-      Feed.create({ feedData: { title: vm.title, feeds: selections } }).success(function(data) {
+      // Create and save output feed in DB
+      OutputFeed.create({ feedData: { title: vm.title, sourceFeeds: selections } }).success(function(data) {
         vm.processing = false;
         vm.feedData = {};
         vm.message = data.message;
@@ -61,16 +61,16 @@ angular.module('feedCtrl', ['feedService', 'subscriptionService'])
 
       // Clear Checkboxes
       vm.title = "";
-      vm.subscriptions.forEach(function(item) {
+      vm.sourceFeeds.forEach(function(item) {
         item.selected = false;
       });
       vm.processing = false;
     };
   })
-  .controller('feedDetailController', function($routeParams, Feed) {
+  .controller('OutputFeedDetailController', function($routeParams, OutputFeed) {
     var vm = this;
 
-    Feed.get($routeParams.feed_id)
+    OutputFeed.get($routeParams.feed_id)
       .success(function(data) {
         vm.feedData = data;
         console.log(data);

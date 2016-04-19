@@ -1,7 +1,7 @@
 var api = '/api/v1'
 
-angular.module('mainCtrl', [])
-  .controller('mainController', function($rootScope, $location, Auth, $scope, $cacheFactory) {
+angular.module('MainCtrl', [])
+  .controller('MainController', function($rootScope, $location, Auth, $scope, $cacheFactory) {
     var vm = this;
 
     // Get login status

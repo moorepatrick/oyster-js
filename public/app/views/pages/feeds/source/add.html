@@ -3,12 +3,12 @@
 </div>
 <a ng-href="/subscriptions" class="btn btn-default">Back</a>
 <div>
-<form class="form-horizontal" ng-submit="subscription.addSubscription()">
+<form class="form-horizontal" ng-submit="sourceFeed.addSourceFeed()">
 
   <div class="form-group">
     <label class="col-sm-3 control-label">URL</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" ng-model="subscription.subscriptionData.url">
+      <input type="text" class="form-control" ng-model="sourceFeed.feedData.url">
     </div>
   </div>
 
@@ -18,10 +18,10 @@
     </div>
   </div>
 </form>
-<div class="row show-hide-message" ng-show="subscription.message">
+<div class="row show-hide-message" ng-show="sourceFeed.message">
   <div class="col-sm-6 col-sm-offset-3">
     <div class="alert alert-info">
-      {{ subscription.message }}
+      {{ sourceFeed.message }}
     </div>
   </div>
 </div>

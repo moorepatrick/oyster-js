@@ -1,5 +1,5 @@
-angular.module('adminCtrl', [])
-  .controller('adminController', function() {
+angular.module('AdminCtrl', [])
+  .controller('AdminController', function() {
     var vm = this;
 
   });

@@ -1,5 +1,5 @@
-angular.module('userCtrl', ['userService'])
-  .controller('userController', function(User) {
+angular.module('UserCtrl', ['UserService'])
+  .controller('UserController', function(User) {
     var vm = this;
     vm.processing = true;
 
@@ -29,7 +29,7 @@ angular.module('userCtrl', ['userService'])
   })
 
 // User Creation
-.controller('userCreateController', function(User) {
+.controller('UserCreateController', function(User) {
   var vm = this;
   vm.type = 'create';
 
@@ -48,7 +48,7 @@ angular.module('userCtrl', ['userService'])
 })
 
 // Edit user
-.controller('userEditController', function($routeParams, User) {
+.controller('UserEditController', function($routeParams, User) {
   var vm = this;
   vm.type = 'edit';
 
