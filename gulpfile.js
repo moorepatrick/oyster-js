@@ -1,8 +1,10 @@
 var gulp = require('gulp'),
+  config,
   del = require('del'),
   concat = require('gulp-concat'),
   uglify = require('gulp-uglify'),
   nodemon = require('gulp-nodemon'),
+  replace = require('gulp-replace'),
   sourcemaps = require('gulp-sourcemaps'),
   ngAnnotate = require('gulp-ng-annotate');
 
@@ -47,12 +49,13 @@ gulp.task('index', function() {
 
 gulp.task('views', function() {
   return gulp.src('./public/app/views/**/*.html')
+    .pipe(replace('BASEURL', config.site.site_base))
     .pipe(gulp.dest('./_public/app/views/'));
 });
 
-gulp.task('develop', ['watch'], function() {
+gulp.task('develop', ['set-dev-node-env', 'watch'], function() {
   nodemon({
-      env: { 'NODE_ENV': 'dev' },
+      //env: { 'NODE_ENV': 'dev' },
       script: 'server.js',
       ext: 'js html css',
       ignore: ['_public/*']
@@ -78,6 +81,11 @@ gulp.task('watch', ['build'], function() {
   gulp.watch('./public/app/views/**/*.html', ['views']);
   gulp.watch('./public/index.html', ['index']);
   gulp.watch('./public/app/**/*.js', ['js']);
+});
+
+gulp.task('set-dev-node-env', function(){
+  process.env.NODE_ENV = 'dev';
+  config = require('config');
 });
 
 gulp.task('build-production', ['views', 'js-production', 'style', 'views', 'jsAssets', 'index']);
