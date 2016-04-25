@@ -8,12 +8,12 @@ module.exports = function(app, express) {
     var rssRouter = express.Router();
 
     // RSS Feed
-    rssRouter.route('/:feed_id')
+    rssRouter.route('/:username/:feed_id')
         .get(function(req, res) {
             // Source Feed Regeneration
             // Split off file extension if present
             var feedId = req.params.feed_id.split('.')[0]
-            OutputFeed.findById(feedId)
+            OutputFeed.findOne({normTitle: feedId})
                 .populate({ path: 'articles', select: '-_id', populate: { path: 'article', select: '-_id -meta' } })
                 .exec(function(err, feed) {
                     if (!feed) return res.json({ message: "Feed Not Found" });

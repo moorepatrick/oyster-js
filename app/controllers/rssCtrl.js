@@ -6,13 +6,13 @@ var RSS = require('rss'),
 function generateFeed(feedObject) {
   var promise = new Promise(function(resolve, reject) {
     console.log("Generate Feed");
-    var fileName = "./_public/feeds/" + feedObject._id + ".xml";
+    var fileName = "./_public/feeds/" + feedObject.normTitle + ".xml";
 
     var feed = new RSS({
       title: feedObject.title,
       description: feedObject.description,
       generator: "Oyster v" + config.version + " (http://oysterjs.com)",
-      feed_url: config.site.feed_base + "/" + feedObject._id + ".xml",
+      feed_url: config.site.feed_base + "/" + feedObject.normTitle + ".xml",
       site_url: config.site.site_base,
       pubDate: feedObject.pubdate,
       language: 'en'

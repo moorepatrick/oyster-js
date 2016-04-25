@@ -58,7 +58,9 @@ var SourceSchema = new Schema({
 var OutputSchema = new Schema({
   type: String,                                             // RSS or Atom
   filters: [],                                              // List of applied filters
+  owner: String,                                            // User
   title: {type: String, required: true},                    // Title
+  normTitle: String,                                        // Normalized Title
   description: String,                                      // Description
   link: String,                                             // Website link
   xmlUrl: String,                                           // Feed link

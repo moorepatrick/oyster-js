@@ -1,14 +1,17 @@
 var _ = require('lodash'),
   OutputFeed = require('../models/feed').outputFeed,
   SourceFeed = require('../models/feed').sourceFeed,
-  config = require('config');
+  config = require('config'),
+  util = require('../util/util');
 
 // Create new user feed
-function add(feedData, name) {
+function add(feedData, user) {
   console.log("Add")
   var promise = new Promise(function(resolve, reject) {
     var newFeed = new OutputFeed({
+      owner: user.username,
       title: feedData.title,
+      normTitle: util.normalize(feedData.title),
       description: feedData.title,
       link: "",
       xmlUrl: "",
@@ -17,12 +20,12 @@ function add(feedData, name) {
       image: { url: "", title: "" },
       copyright: "",
       categories: "",
-      author: name,
+      author: user.name,
       language: 'en',
-      generator: "Oyster v" + config.version +" (http://oysterjs.com)",
+      generator: "Oyster v" + config.version + " (http://oysterjs.com)",
     });
 
-    newFeed.link = "/rss/" + newFeed._id;
+    newFeed.link = "/rss/" + user.username + '/' + newFeed.normTitle;
 
     Promise.all(populate(feedData))
       .then(function(values) {

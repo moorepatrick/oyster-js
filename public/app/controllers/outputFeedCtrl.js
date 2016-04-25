@@ -1,42 +1,52 @@
-angular.module('OutputFeedCtrl', ['OutputFeedService', 'SourceFeedService'])
-  .controller('OutputFeedController', function(OutputFeed) {
+angular.module('OutputFeedCtrl', ['OutputFeedService', 'SourceFeedService', 'AuthService'])
+  .controller('OutputFeedController', function(OutputFeed, Auth) {
     var vm = this;
     vm.processing = true;
 
-    OutputFeed.all()
-      .success(function(data) {
-        vm.processing = false;
-        vm.outputFeeds = data[0].outputFeeds;
+    Auth.getUser()
+      .then(function(data) {
+        vm.user = data.data;
+
+        OutputFeed.all(vm.user.username)
+          .success(function(data) {
+            vm.processing = false;
+            vm.outputFeeds = data.outputFeeds;
+          });
       });
 
     vm.deleteFeed = function(id) {
       vm.proccessing = true;
 
-      OutputFeed.delete(id)
+      OutputFeed.delete(vm.user.username, id)
         .success(function(data) {
           vm.message = data.message;
           console.log(vm.message);
-          OutputFeed.all()
+          OutputFeed.all(vm.user.username)
             .success(function(data) {
               vm.processing = false;
-              vm.outputFeeds = data[0].outputFeeds;
+              vm.outputFeeds = data.outputFeeds;
             });
         });
     };
   })
-  .controller('OutputFeedAddController', function(OutputFeed, SourceFeed) {
+  .controller('OutputFeedAddController', function(OutputFeed, SourceFeed, Auth) {
     var vm = this;
     vm.processing = true;
 
     // Get get all user subscriptions and set false selection status
-    SourceFeed.all()
-      .success(function(data) {
-        vm.title = "";
-        vm.sourceFeeds = data[0].sourceFeeds;
-        vm.sourceFeeds.forEach(function(item) {
-          item.selected = false;
-        });
-        vm.processing = false;
+    Auth.getUser()
+      .then(function(data) {
+        vm.user = data.data;
+
+        SourceFeed.all()
+          .success(function(data) {
+            vm.title = "";
+            vm.sourceFeeds = data[0].sourceFeeds;
+            vm.sourceFeeds.forEach(function(item) {
+              item.selected = false;
+            });
+            vm.processing = false;
+          });
       });
 
     // Add new output feed
@@ -53,26 +63,31 @@ angular.module('OutputFeedCtrl', ['OutputFeedService', 'SourceFeedService'])
       });
 
       // Create and save output feed in DB
-      OutputFeed.create({ feedData: { title: vm.title, sourceFeeds: selections } }).success(function(data) {
-        vm.processing = false;
-        vm.feedData = {};
+      OutputFeed.create(vm.user.username, { feedData: { title: vm.title, sourceFeeds: selections } }).success(function(data) {
         vm.message = data.message;
+        if(data.success){
+          vm.title = "";
+          // Clear Checkboxes
+          vm.sourceFeeds.forEach(function(item) {
+            item.selected = false;
+          });
+          vm.feedData = {};
+        }
+        vm.processing = false;
       });
-
-      // Clear Checkboxes
-      vm.title = "";
-      vm.sourceFeeds.forEach(function(item) {
-        item.selected = false;
-      });
-      vm.processing = false;
     };
   })
-  .controller('OutputFeedDetailController', function($routeParams, OutputFeed) {
+  .controller('OutputFeedDetailController', function($routeParams, OutputFeed, Auth) {
     var vm = this;
 
-    OutputFeed.get($routeParams.feed_id)
-      .success(function(data) {
-        vm.feedData = data;
-        console.log(data);
+    Auth.getUser()
+      .then(function(data) {
+        vm.user = data.data;
+
+        OutputFeed.get(vm.user.username, $routeParams.feed_id)
+          .success(function(data) {
+            vm.feedData = data;
+            console.log(data);
+          });
       });
   });

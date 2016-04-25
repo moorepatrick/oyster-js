@@ -17,19 +17,19 @@ angular.module('app.routes', ['ngRoute'])
     controllerAs: 'profile'
   })
 
-  .when('/feeds/',{
+  .when('/feeds/:username/',{
     templateUrl: 'app/views/pages/feeds/output/all.html',
     controller: 'OutputFeedController',
     controllerAs: 'outputFeed'
   })
 
-  .when('/feeds/add', {
+  .when('/feeds/:username/add', {
     templateUrl: 'app/views/pages/feeds/output/add.html',
     controller: 'OutputFeedAddController',
     controllerAs: 'outputFeed'
   })
 
-  .when('/feeds/:feed_id', {
+  .when('/feeds/:username/:feed_id', {
     templateUrl: 'app/views/pages/feeds/output/detail.html',
     controller: 'OutputFeedDetailController',
     controllerAs: 'outputFeed'

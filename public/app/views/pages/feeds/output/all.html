@@ -1,7 +1,7 @@
 <div class="page-header">
   <h1>
     Feeds
-    <a href="/feeds/add" class="btn btn-default">
+    <a href="/feeds/{{outputFeed.user.username}}/add" class="btn btn-default">
       <span class="glyphicon glyphicon-plus"></span>
       New Feed
     </a>
@@ -25,13 +25,13 @@
     <!-- LOOP OVER THE FEEDS -->
     <tr ng-repeat="item in outputFeed.outputFeeds">
       <td>{{ item._id }}</td>
-      <td>{{ item.title }}</td>
+      <td>{{ item.normTitle }}</td>
       <td>
         <a href={{item.link}} target="_self">
           BASEURL{{ item.link }}</a>
       </td>
       <td class="col-sm-2">
-        <a ng-href="/feeds/{{ item._id }}" class="btn btn-primary">View</a>
+        <a ng-href="/feeds/{{outputFeed.user.username}}/{{ item.normTitle }}" class="btn btn-primary">View</a>
         <a href="#" ng-click="outputFeed.deleteFeed(item._id)" class="btn btn-danger">Delete</a>
       </td>
     </tr>

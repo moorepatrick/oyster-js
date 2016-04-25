@@ -5,6 +5,8 @@ var User = require('../models/user'),
   outputFeedCtrl = require('../controllers/outputFeedCtrl'),
   sourceFeedCtrl = require('../controllers/sourceFeedCtrl'),
   path = require('path'),
+  _ = require('lodash'),
+  util = require('../util/util'),
   config = require('config');
 
 // Token Secret
@@ -167,77 +169,118 @@ module.exports = function(app, express) {
     });
 
   // User's filtered feeds
-  apiRouter.route('/output_feeds/:feed_id')
+  apiRouter.route('/output_feeds/:username/:feed_id')
     .get(function(req, res) {
-      OutputFeed.findById(req.params.feed_id)
-      .populate({path: 'articles', select: '-_id', populate: {path: 'article', select: '-_id -meta'} })
-      .exec(function(err, feed) {
-        if (!feed) res.json({ message: "Feed Not Found" });
+      if (req.params.username !== req.decoded.username) {
+        res.sendStatus(403);
+      } else {
+        User.findOne({ username: req.params.username })
+          .populate({
+            path: 'outputFeeds',
+            populate: {
+              path: 'articles',
+              select: '-_id',
+            }
+          }).exec(function(err, user) {
+            var index = _.findIndex(user.outputFeeds, { 'normTitle': req.params.feed_id });
+            if (index !== -1) {
+              OutputFeed.findById(user.outputFeeds[index]._id)
+                .populate({ path: 'articles', select: '-_id', populate: { path: 'article', select: '-_id -meta' } })
+                .exec(function(err, feed) {
+                  if (!feed) res.json({ message: "Feed Not Found" });
 
-        res.json(feed);
-      });
+                  res.json(feed);
+                });
+            } else {
+              res.json({ message: "Feed Not Found" });
+            }
+          });
+      }
     })
     .put(function(req, res) {
-      res.json({ message: req.method + ': ' + req.url + ' not yet implemented' });
+      if (req.params.username !== req.decoded.username) {
+        res.sendStatus(403);
+      } else {
+        res.json({ message: req.method + ': ' + req.url + ' not yet implemented' });
+      }
     })
     .delete(function(req, res) {
-      // Remove feed from Output Feeds
-      OutputFeed.remove({ _id: req.params.feed_id }, function(err, feed) {
-        if (err) res.send(err);
-
-        // Remove feed from user's feeds list
-        User.update({ username: req.decoded.username }, { $pull: { outputFeeds: req.params.feed_id } }, function(err, raw) {
-          if (err) res.send(err)
-
-          res.json({ message: 'Feed Deleted' });
-        })
-      });
-    });
-
-  apiRouter.route('/output_feeds')
-    .get(function(req, res) {
-      User.find({ username: req.decoded.username })
-        .populate('outputFeeds', 'title link' )
-        .select('-_id username outputFeeds')
-        .exec(function(err, feeds) {
+      if (req.params.username !== req.decoded.username) {
+        res.sendStatus(403);
+      } else {
+        // Remove feed from Output Feeds
+        OutputFeed.remove({ _id: req.params.feed_id }, function(err, feed) {
           if (err) res.send(err);
 
-          res.json(feeds);
+          // Remove feed from user's feeds list
+          User.update({ username: req.decoded.username }, { $pull: { outputFeeds: req.params.feed_id } }, function(err, raw) {
+            if (err) res.send(err)
+
+            res.json({ message: 'Feed Deleted' });
+          })
         });
+      }
+    });
+
+  apiRouter.route('/output_feeds/:username')
+    .get(function(req, res) {
+      if (req.params.username !== req.decoded.username) {
+        res.sendStatus(403);
+      } else {
+        User.findOne({ username: req.decoded.username })
+          .populate('outputFeeds', 'title link normTitle')
+          .select('-_id username outputFeeds')
+          .exec(function(err, feeds) {
+            if (err) res.send(err);
+
+            res.json(feeds);
+          });
+      }
     })
     // Add feed to users feeds list
     .post(function(req, res) {
       console.log("Start Feed Creation: " + req.body.feedData);
+      if (req.params.username !== req.decoded.username) {
+        res.sendStatus(403);
+      } else {
+        OutputFeed.findOne({owner: req.decoded.username, normTitle: util.normalize(req.body.feedData.title) })
+        .exec(function(err, feed){
+          if(!feed){
+            outputFeedCtrl.add(req.body.feedData, req.decoded)
+              .then(function(data) {
+                console.log("Update Feed List");
+                User.update({ username: req.decoded.username }, { $addToSet: { 'outputFeeds': data.id } },
+                  function(err) {
+                    if (err) res.send(err);
 
-      outputFeedCtrl.add(req.body.feedData, req.decoded.name)
-        .then(function(data) {
-          console.log("Update Feed List")
-          User.update({ username: req.decoded.username }, { $addToSet: { 'outputFeeds': data.id } },
-            function(err, user) {
-              if (err) res.send(err);
+                    console.log(data.message + " " + data.id);
+                    res.json({ message: data.message + ": " + data.id, success: true });
+                  });
+              }).catch(function(error) {
+                console.log("Error: " + error);
+                res.json({ message: "Error: " + error, success: false });
+              });
 
-              console.log(data.message + " " + data.id);
-              res.json({ message: data.message + ": " + data.id });
-            });
-        }).catch(function(error) {
-          console.log("Error: " + error);
-          res.json({ message: "Error: " + error });
+            console.log(req.method);
+          }
+          else{
+            res.json({message: req.body.feedData.title + " already exists", success: false});
+          }
         });
-
-      console.log(req.method);
+      }
     });
 
   // Subscribed feeds (Source Feeds)
   apiRouter.route('/source_feeds/:feed_id')
     .get(function(req, res) {
       SourceFeed.findById(req.params.feed_id)
-      .populate('articles')
-      .exec(function(err, feed) {
-        if (!feed) res.json({ message: "Feed Not Found" });
+        .populate('articles')
+        .exec(function(err, feed) {
+          if (!feed) res.json({ message: "Feed Not Found" });
 
-        res.json(feed);
+          res.json(feed);
 
-      });
+        });
     })
     .delete(function(req, res) {
       // Remove feed from users subscriptions list, but not Source Feeds
