@@ -54,7 +54,9 @@ Much of the feed schema is based on the output from [node-feedparser](https://gi
 ### OutputSchema
 - type - Atom or RSS (Not Implemented)
 - filters
+- owner
 - title
+- normTitle
 - description
 - link
 - xmlUrl - feed link
@@ -146,7 +148,7 @@ Delete user
 - return
   - message
 
-### feeds (/output_feeds)
+### feeds (/output_feeds/:username)
 #### GET
 Get all feeds user has created
 - return
@@ -157,7 +159,7 @@ Get all feeds user has created
 #### POST - Not Implemented
 Create new user feed
 
-### feed (/output_feeds/:feed_id)
+### feed (/output_feeds/:username/:feed_id)
 #### GET
 Get single user feed
 - return
