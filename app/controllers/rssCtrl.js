@@ -3,10 +3,10 @@ var RSS = require('rss'),
   fs = require('fs'),
   config = require('config');
 
-function generateFeed(feedObject) {
+function generateFeed(feedObject, username) {
   var promise = new Promise(function(resolve, reject) {
     console.log("Generate Feed");
-    var fileName = "./_public/feeds/" + feedObject.normTitle + ".xml";
+    var fileName = "./_public/feeds/" + username + '/' +  feedObject.normTitle + ".xml";
 
     var feed = new RSS({
       title: feedObject.title,
