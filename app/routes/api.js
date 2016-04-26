@@ -240,9 +240,12 @@ module.exports = function(app, express) {
     // Add feed to users feeds list
     .post(function(req, res) {
       console.log("Start Feed Creation: " + req.body.feedData);
+      var normTitle = util.normalize(req.body.feedData.title);
       if (req.params.username !== req.decoded.username) {
         res.sendStatus(403);
-      } else {
+      } else if (normTitle === 'add' || normTitle === 'detail') {
+        res.json({message: req.body.feedData.title + " is not an allowed feed title."});
+      }else {
         OutputFeed.findOne({owner: req.decoded.username, normTitle: util.normalize(req.body.feedData.title) })
         .exec(function(err, feed){
           if(!feed){
@@ -264,7 +267,7 @@ module.exports = function(app, express) {
             console.log(req.method);
           }
           else{
-            res.json({message: req.body.feedData.title + " already exists", success: false});
+            res.json({message: req.body.feedData.title + " already exists. Choose another name.", success: false});
           }
         });
       }
