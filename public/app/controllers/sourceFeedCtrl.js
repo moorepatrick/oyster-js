@@ -53,10 +53,12 @@ angular.module('SourceFeedCtrl', ['SourceFeedService'])
     // View full Source Feed Data
     .controller('SourceFeedDetailController', function($routeParams, SourceFeed){
       var vm = this;
+      vm.processing = true;
       console.log($routeParams.feed_id)
       SourceFeed.get($routeParams.feed_id)
       .success(function(data){
         console.log(data)
+        vm.processing = false;
         vm.feedData = data;
       });
     });

@@ -79,7 +79,7 @@ angular.module('OutputFeedCtrl', ['OutputFeedService', 'SourceFeedService', 'Aut
   })
   .controller('OutputFeedDetailController', function($routeParams, OutputFeed, Auth) {
     var vm = this;
-
+    vm.processing = true;
     Auth.getUser()
       .then(function(data) {
         vm.user = data.data;
@@ -87,6 +87,7 @@ angular.module('OutputFeedCtrl', ['OutputFeedService', 'SourceFeedService', 'Aut
         OutputFeed.get(vm.user.username, $routeParams.feed_id)
           .success(function(data) {
             vm.feedData = data;
+            vm.processing = false;
             console.log(data);
           });
       });

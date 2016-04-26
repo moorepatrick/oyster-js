@@ -1,6 +1,10 @@
 <div class="page-header">
   <h1>Feed Details</h1>
 </div>
+<div class="jumbotron text-center" ng-show="outputFeed.processing">
+  <span class="glyphicon glyphicon-repeat spinner"></span>
+  <p>Loading Feed...</p>
+</div>
 <a ng-href="/feeds/{{outputFeed.user.username}}" class="btn btn-default">Back</a>
 <div>
   <h2>{{outputFeed.feedData.title}}</h2>
