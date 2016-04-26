@@ -316,8 +316,8 @@ module.exports = function(app, express) {
             res.json({ message: data.message + ": " + data.id });
           });
       }).catch(function(error) {
-        console.log("Error: " + error);
-        res.json({ message: "ERROR: " + error });
+        console.log(error);
+        res.json({ message: error });
       });
     });
 

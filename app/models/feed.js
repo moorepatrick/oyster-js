@@ -34,6 +34,7 @@ var OutputArticleSchema = new Schema({
 // Source Feeds from publishers
 var SourceSchema = new Schema({
   type: String,                                             // RSS or Atom
+  _id: { type: String, required: true, index: { unique: true } },
   title: {type: String, required: true},                    // Title
   lastRetrieved: Date,                                      // Date last retrieved from source server
   description: String,                                      // Description

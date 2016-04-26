@@ -8,7 +8,7 @@ var UserSchema = new Schema({
   username: { type: String, required: true, index: { unique: true } },
   password: { type: String, required: true, select: false },
   admin: {type: Boolean, require: true, default: false},
-  sourceFeeds: [{type: Schema.Types.ObjectId, ref: 'SourceFeed'}],  // Array of Source Feed ID's
+  sourceFeeds: [{type: String, ref: 'SourceFeed'}],  // Array of Source Feed ID's
   outputFeeds: [{type: Schema.Types.ObjectId, ref: 'OutputFeed'}] // Array of Output Feed ID's
 });
 
