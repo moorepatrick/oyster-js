@@ -188,7 +188,14 @@ module.exports = function(app, express) {
                 .populate({ path: 'articles', select: '-_id', populate: { path: 'article', select: '-_id -meta' } })
                 .exec(function(err, feed) {
                   if (!feed) res.json({ message: "Feed Not Found" });
-
+                  if (Number(req.query.count) > 1) {
+                    var count = Number(req.query.count);
+                    var start = 0;
+                    if (Number(req.query.start) > 1) {
+                      start = Number(req.query.start);
+                    }
+                    feed.articles = feed.articles.slice(start, start + count);
+                  }
                   res.json(feed);
                 });
             } else {
@@ -244,46 +251,45 @@ module.exports = function(app, express) {
       if (req.params.username !== req.decoded.username) {
         res.sendStatus(403);
       } else if (normTitle === 'add' || normTitle === 'detail') {
-        res.json({message: req.body.feedData.title + " is not an allowed feed title."});
-      }else {
-        OutputFeed.findOne({owner: req.decoded.username, normTitle: util.normalize(req.body.feedData.title) })
-        .exec(function(err, feed){
-          if(!feed){
-            outputFeedCtrl.add(req.body.feedData, req.decoded)
-              .then(function(data) {
-                console.log("Update Feed List");
-                User.update({ username: req.decoded.username }, { $addToSet: { 'outputFeeds': data.id } },
-                  function(err) {
-                    if (err) res.send(err);
+        res.json({ message: req.body.feedData.title + " is not an allowed feed title." });
+      } else {
+        OutputFeed.findOne({ owner: req.decoded.username, normTitle: util.normalize(req.body.feedData.title) })
+          .exec(function(err, feed) {
+            if (!feed) {
+              outputFeedCtrl.add(req.body.feedData, req.decoded)
+                .then(function(data) {
+                  console.log("Update Feed List");
+                  User.update({ username: req.decoded.username }, { $addToSet: { 'outputFeeds': data.id } },
+                    function(err) {
+                      if (err) res.send(err);
 
-                    console.log(data.message + " " + data.id);
-                    res.json({ message: data.message + ": " + data.id, success: true });
-                  });
-              }).catch(function(error) {
-                console.log("Error: " + error);
-                res.json({ message: "Error: " + error, success: false });
-              });
+                      console.log(data.message + " " + data.id);
+                      res.json({ message: data.message + ": " + data.id, success: true });
+                    });
+                }).catch(function(error) {
+                  console.log("Error: " + error);
+                  res.json({ message: "Error: " + error, success: false });
+                });
 
-            console.log(req.method);
-          }
-          else{
-            res.json({message: req.body.feedData.title + " already exists. Choose another name.", success: false});
-          }
-        });
+              console.log(req.method);
+            } else {
+              res.json({ message: req.body.feedData.title + " already exists. Choose another name.", success: false });
+            }
+          });
       }
     });
 
   // Subscribed feeds (Source Feeds)
   apiRouter.route('/source_feeds/:feed_id')
     .get(function(req, res) {
-      SourceFeed.findById(req.params.feed_id)
+            SourceFeed.findById(req.params.feed_id)
         .populate('articles')
-        .exec(function(err, feed) {
-          if (!feed) res.json({ message: "Feed Not Found" });
+              .exec(function(err, feed) {
+                if (!feed) res.json({ message: "Feed Not Found" });
 
-          res.json(feed);
+                res.json(feed);
 
-        });
+              });
     })
     .delete(function(req, res) {
       // Remove feed from users subscriptions list, but not Source Feeds
@@ -299,29 +305,29 @@ module.exports = function(app, express) {
   apiRouter.route('/source_feeds')
     .get(function(req, res) {
       User.find({ username: req.decoded.username })
-        .populate('sourceFeeds', 'title link')
+          .populate('sourceFeeds', 'title link')
         .select('username sourceFeeds')
-        .exec(function(err, sourceFeeds) {
-          if (err) res.send(err);
-
-          res.json(sourceFeeds);
-        });
-    })
-    .post(function(req, res) {
-      console.log("Start Post: " + req.body.url);
-      sourceFeedCtrl.add(req.body.url).then(function(data) {
-        console.log("Update User List")
-        User.update({ username: req.decoded.username }, { $addToSet: { 'sourceFeeds': data.id } },
-          function(err, user) {
+          .exec(function(err, sourceFeeds) {
             if (err) res.send(err);
 
-            console.log(data.message + " " + data.id);
-            res.json({ message: data.message + ": " + data.id });
+            res.json(sourceFeeds);
           });
-      }).catch(function(error) {
-        console.log(error);
-        res.json({ message: error });
-      });
+    })
+    .post(function(req, res) {
+        console.log("Start Post: " + req.body.url);
+        sourceFeedCtrl.add(req.body.url).then(function(data) {
+          console.log("Update User List")
+          User.update({ username: req.decoded.username }, { $addToSet: { 'sourceFeeds': data.id } },
+            function(err, user) {
+              if (err) res.send(err);
+
+              console.log(data.message + " " + data.id);
+              res.json({ message: data.message + ": " + data.id });
+            });
+        }).catch(function(error) {
+          console.log(error);
+          res.json({ message: error });
+        });
     });
 
   // // Access to all feeds in database
