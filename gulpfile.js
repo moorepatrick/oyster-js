@@ -17,8 +17,10 @@ gulp.task('delete', function() {
 
 gulp.task('js', function() {
   return gulp.src('./public/app/**/*.js')
+    .pipe(sourcemaps.init())
     .pipe(ngAnnotate())
     .pipe(concat('bundle.js'))
+    .pipe(sourcemaps.write())
     .pipe(gulp.dest('./_public/app/'));
 });
 
@@ -73,7 +75,7 @@ gulp.task('develop', ['set-dev-node-env', 'watch'], function() {
     });
 });
 
-gulp.task('build', ['views', 'js', 'style', 'views', 'jsAssets', 'index']);
+gulp.task('build', ['views', 'js', 'style', 'jsAssets', 'index']);
 
 gulp.task('watch', ['build'], function() {
   gulp.watch('./app/assets/js/*', ['jsAssets']);
@@ -83,7 +85,7 @@ gulp.task('watch', ['build'], function() {
   gulp.watch('./public/app/**/*.js', ['js']);
 });
 
-gulp.task('set-dev-node-env', function(){
+gulp.task('set-dev-node-env', function() {
   process.env.NODE_ENV = 'dev';
   config = require('config');
 });
