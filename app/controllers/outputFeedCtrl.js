@@ -47,8 +47,10 @@ function add(feedData, user) {
           if (err) {
             console.log("New Output Save Error: " + err);
             reject(err);
+          }else{
+            resolve({ message: "Success", title:feed.title, id: feed.id });
           }
-          resolve({ message: "Success", id: feed._id });
+
         });
       })
       .catch(function(data) {

@@ -77,7 +77,7 @@ var populateFeed = function(url) {
             }
           });
         });
-        resolve(newFeed._id);
+        resolve(newFeed);
       } else {
         console.log("No MetaData");
         reject("Error: URL Does Not Reference Feed");
@@ -143,14 +143,16 @@ function add(url) {
       if (feed) {
         //Found duplicate feed
         resolve({
-          message: "Duplicate Feed",
-          id: feed._id
+          message: "Inserted Feed",
+          id: feed._id,
+          title: feed.title
         });
       } else { // Feed not found in DB
-        populateFeed(url).then(function(feedId) {
+        populateFeed(url).then(function(feed) {
             resolve({
               message: "Inserted Feed",
-              id: feedId
+              title: feed.title,
+              id: feed._id
             });
           })
           .catch(function(error) {

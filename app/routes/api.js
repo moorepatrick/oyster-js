@@ -263,8 +263,8 @@ module.exports = function(app, express) {
                     function(err) {
                       if (err) res.send(err);
 
-                      console.log(data.message + " " + data.id);
-                      res.json({ message: data.message + ": " + data.id, success: true });
+                      console.log(data.message + " " + data.title);
+                      res.json({ message: data.message + ": " + data.title, success: true });
                     });
                 }).catch(function(error) {
                   console.log("Error: " + error);
@@ -348,8 +348,8 @@ module.exports = function(app, express) {
             function(err, user) {
               if (err) res.send(err);
 
-              console.log(data.message + " " + data.id);
-              res.json({ message: data.message + ": " + data.id });
+              console.log(data.message + " " + data.title);
+              res.json({ message: data.message + ": " + data.title });
             });
         }).catch(function(error) {
           console.log(error);
