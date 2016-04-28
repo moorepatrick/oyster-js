@@ -169,7 +169,7 @@ function hashUrl(url) {
   if (!match[1]) {
     match[1] = 'http://';
   }
-  return util.sha256Hash(match[1].toLowerCase() + match[2].toLowerCase() + '/' + match[3]).replace('/', "_").replace('+', '-');
+  return util.sha256Hash(match[1].toLowerCase() + match[2].toLowerCase() + '/' + match[3]).replace(/\//g, '_').replace(/_/g, '-');
 }
 
 module.exports.add = add;
