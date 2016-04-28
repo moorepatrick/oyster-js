@@ -8,6 +8,6 @@
 
 	<div ng-if="main.loggedIn">
 		<p>Manage your feeds.</p>
-		<a href="/users" class="btn btn-primary">View Feeds</a>
+		<a href="/feeds/{{main.user.username}}" class="btn btn-primary">View Feeds</a>
 	</div>
 </div>
