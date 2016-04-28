@@ -41,19 +41,19 @@ angular.module('app.routes', ['ngRoute'])
     controllerAs: 'admin'
   })
 
-  .when('/subscriptions/', {
+  .when('/subscriptions/:username', {
     templateUrl: 'app/views/pages/feeds/source/all.html',
     controller: 'SourceFeedController',
     controllerAs: 'sourceFeed'
   })
 
-  .when('/subscriptions/add', {
+  .when('/subscriptions/:username/add', {
     templateUrl: 'app/views/pages/feeds/source/add.html',
     controller: 'SourceFeedAddController',
     controllerAs: 'sourceFeed'
   })
 
-  .when('/subscriptions/:feed_id', {
+  .when('/subscriptions/:username/:feed_id', {
     templateUrl: 'app/views/pages/feeds/source/detail.html',
     controller: 'SourceFeedDetailController',
     controllerAs: 'sourceFeed'

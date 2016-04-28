@@ -280,16 +280,36 @@ module.exports = function(app, express) {
     });
 
   // Subscribed feeds (Source Feeds)
-  apiRouter.route('/source_feeds/:feed_id')
+  apiRouter.route('/source_feeds/:username/:feed_id')
     .get(function(req, res) {
+      if (req.params.username !== req.decoded.username) {
+        res.sendStatus(403);
+      } else {
+        User.findOne({
+          username: req.params.username,
+          sourceFeeds: {$all: [req.params.feed_id] }
+        }).exec(function(err, user) {
+          if (!user) res.json({ message: "User Does Not Subscribe To Feed" });
+          else {
             SourceFeed.findById(req.params.feed_id)
-        .populate('articles')
+              .populate({path:'articles', select: '-_id title pubdate description origlink'})
               .exec(function(err, feed) {
                 if (!feed) res.json({ message: "Feed Not Found" });
-
+                if (Number(req.query.count) > 1) {
+                  var count = Number(req.query.count);
+                  var start = 0;
+                  if (Number(req.query.start) > 1) {
+                    start = Number(req.query.start);
+                  }
+                  feed.articles = feed.articles.slice(start, start + count);
+                }
                 res.json(feed);
 
               });
+          }
+        })
+
+      }
     })
     .delete(function(req, res) {
       // Remove feed from users subscriptions list, but not Source Feeds
@@ -302,18 +322,25 @@ module.exports = function(app, express) {
       });
     });
 
-  apiRouter.route('/source_feeds')
+  apiRouter.route('/source_feeds/:username')
     .get(function(req, res) {
-      User.find({ username: req.decoded.username })
+      if (req.params.username !== req.decoded.username) {
+        res.sendStatus(403);
+      } else {
+        User.findOne({ username: req.decoded.username })
           .populate('sourceFeeds', 'title link')
-        .select('username sourceFeeds')
+          .select('-_id username sourceFeeds')
           .exec(function(err, sourceFeeds) {
             if (err) res.send(err);
 
             res.json(sourceFeeds);
           });
+      }
     })
     .post(function(req, res) {
+      if (req.params.username !== req.decoded.username) {
+        res.sendStatus(403);
+      } else {
         console.log("Start Post: " + req.body.url);
         sourceFeedCtrl.add(req.body.url).then(function(data) {
           console.log("Update User List")
@@ -328,6 +355,7 @@ module.exports = function(app, express) {
           console.log(error);
           res.json({ message: error });
         });
+      }
     });
 
   // // Access to all feeds in database

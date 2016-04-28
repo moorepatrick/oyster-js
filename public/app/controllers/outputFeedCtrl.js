@@ -38,10 +38,10 @@ angular.module('OutputFeedCtrl', ['OutputFeedService', 'SourceFeedService', 'Aut
       .then(function(data) {
         vm.user = data.data;
 
-        SourceFeed.all()
+        SourceFeed.all(vm.user.username)
           .success(function(data) {
             vm.title = "";
-            vm.sourceFeeds = data[0].sourceFeeds;
+            vm.sourceFeeds = data.sourceFeeds;
             vm.sourceFeeds.forEach(function(item) {
               item.selected = false;
             });

@@ -5,7 +5,7 @@
   <span class="glyphicon glyphicon-repeat spinner"></span>
   <p>Loading Subscription...</p>
 </div>
-<a ng-href="/subscriptions" class="btn btn-default">Back</a>
+<a ng-href="/subscriptions/{{sourceFeed.user.username}}" class="btn btn-default">Back</a>
 <div>
   <h2>{{sourceFeed.feedData.title}}</h2>
   <img ng-src="{{sourceFeed.feedData.image.url}}" width=200 height=200/>

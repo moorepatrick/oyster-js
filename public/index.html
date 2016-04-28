@@ -58,7 +58,7 @@
         <div id="navbar" class="collapse navbar-collapse" ng-class="!navCollapsed && 'in'" ng-if="main.loggedIn">
           <ul class="nav navbar-nav navbar-right">
             <li><a href="/profile">Profile</a></li>
-            <li><a href="/subscriptions">Subscriptions</a></li>
+            <li><a href="/subscriptions/{{main.user.username}}">Subscriptions</a></li>
             <li><a href="/feeds/{{main.user.username}}">Feeds</a></li>
             <li><a href="/settings">Settings</a></li>
             <li ng-if="main.user.admin"><a href="/admin">Admin</a></li>

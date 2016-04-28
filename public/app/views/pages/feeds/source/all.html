@@ -1,7 +1,7 @@
 <div class="page-header">
   <h1>
     Subscriptions
-    <a href="/subscriptions/add" class="btn btn-default">
+    <a href="/subscriptions/{{sourceFeed.user.username}}/add" class="btn btn-default">
       <span class="glyphicon glyphicon-plus"></span>
       New Subscription
     </a>
@@ -28,7 +28,7 @@
       <td>{{ feed.title }}</td>
       <td>{{ feed.link }}</td>
       <td class="col-sm-2">
-        <a ng-href="/subscriptions/{{ feed._id }}" class="btn btn-primary">View</a>
+        <a ng-href="/subscriptions/{{sourceFeed.user.username}}/{{ feed._id }}" class="btn btn-primary">View</a>
         <a href="#" ng-click="sourceFeed.deleteFeed(feed._id)" class="btn btn-danger">Delete</a>
       </td>
     </tr>
